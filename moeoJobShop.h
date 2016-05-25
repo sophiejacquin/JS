@@ -48,6 +48,10 @@ class moeoJobShop : public moeoRealVector < moeoJobShopObjectiveVector >, public
 	{
 		listeJobs=liste;
 	}
+	vector<int> & getListeJobs()
+	{
+		return listeJobs;
+	}
  private :
  	std::vector<int> listeJobs;
 	int N;
