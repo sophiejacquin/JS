@@ -9,6 +9,7 @@ template<class eoJobShop>
 class moeoInsertMutation: public eoMonOp<eoJobShop>
 {
  public:
+	
 	moeoInsertMutation()
 	{
 		
@@ -16,11 +17,15 @@ class moeoInsertMutation: public eoMonOp<eoJobShop>
 	virtual std::string className() const { return "moeoInsertMutation"; }
 	bool operator() (eoJobShop & eo)
 	{
-		eoShiftMutation< vector<int> > mut(nbSwap);
-		mut(eo.getListeJobs()); //si pb reflechir fonction qui renvoie ref...
+		eoShiftMutation< eoVector<double, int> > mut;
+		eoVector<double, int> x;
+		x.value(eo.getListeJobs());
+		mut(x); //si pb reflechir fonction qui renvoie ref...
 		return true;
 	}
+
 
  
 
 };
+#endif

@@ -16,6 +16,10 @@ template <class EOT>
 class moeoJSEvalFunc : public eoEvalFunc<EOT>
 {
  public:
+  moeoJSEvalFunc()
+  {
+      
+  }
   moeoJSEvalFunc(Data & data_)
   {
       data=data_;
@@ -57,7 +61,7 @@ class moeoJSEvalFunc : public eoEvalFunc<EOT>
 
               
           }
-	moeoUCPObjectiveVector objVec;
+	eoJobShopObjectiveVector objVec;
 	objVec[0]=earliness;
 	objVec[1]=tardiness;
 	_eo.objectiveVector(objVec);

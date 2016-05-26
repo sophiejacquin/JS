@@ -5,9 +5,10 @@
 #include <iostream>
 #include <fstream>
 #include <addToParadisEO/moeo/core/Origin.h>
-class moeoJobShopX : public moeoRealVector < moeoJobShopXObjectiveVector >, public Origin{
+#include "eoJobShopObjectiveVector.h"
+class moeoJobShopX : public moeoRealVector < eoJobShopObjectiveVector >, public Origin{
  public:
-	moeoJobShop()
+	moeoJobShopX()
 	{
 		N=0;
 	}
@@ -20,21 +21,21 @@ class moeoJobShopX : public moeoRealVector < moeoJobShopXObjectiveVector >, publ
     	void printOn(ostream& os) const
     	{
       
-     	 	moeoIntVector<moeoJobShopXObjectiveVector>::printOn(os);
+     	 	moeoRealVector<eoJobShopObjectiveVector>::printOn(os);
       		os << ' ';
     
     	}
     	void readFrom(istream& is)
       	{
 	
-		moeoIntVector<eoJobShopXObjectiveVector>::readFrom(is);
+		moeoRealVector<eoJobShopObjectiveVector>::readFrom(is);
     
       	}
-	int getJob(i)
+	int getJob(unsigned int i)
 	{
 		return listeJobs[i];
 	}
-	double getCompletionTime(i)
+	double getCompletionTime(unsigned int i)
 	{
 		return completionTime[i];
 	}

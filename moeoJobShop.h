@@ -5,7 +5,8 @@
 #include <iostream>
 #include <fstream>
 #include <addToParadisEO/moeo/core/Origin.h>
-class moeoJobShop : public moeoRealVector < moeoJobShopObjectiveVector >, public Origin{
+#include "eoJobShopObjectiveVector.h"
+class moeoJobShop : public moeoRealVector < eoJobShopObjectiveVector >, public Origin{
  public :
 	moeoJobShop()
 	{
@@ -20,8 +21,8 @@ class moeoJobShop : public moeoRealVector < moeoJobShopObjectiveVector >, public
     	void printOn(ostream& os) const
     	{
       
-     	 moeoIntVector<moeoJobShopObjectiveVector>::printOn(os);
-      	os << ' ';
+     	 	moeoRealVector<eoJobShopObjectiveVector>::printOn(os);
+      	 	os << ' ';
     
     	}
 
@@ -29,10 +30,10 @@ class moeoJobShop : public moeoRealVector < moeoJobShopObjectiveVector >, public
     	void readFrom(istream& is)
       	{
 	
-	moeoIntVector<eoJobShopObjectiveVector>::readFrom(is);
+	moeoRealVector<eoJobShopObjectiveVector>::readFrom(is);
     
       	}
-	int operator [](i)
+	int operator [](unsigned int i)
 	{
 		return listeJobs[i];
 	}

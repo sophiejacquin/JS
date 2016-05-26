@@ -9,6 +9,10 @@ template<class eoJobShop>
 class moeoSwapMutation: public eoMonOp<eoJobShop>
 {
  public:
+	moeoSwapMutation()
+	{
+		nbSwap=1;
+	}
 	moeoSwapMutation(int nb)
 	{
 		nbSwap=nb;
@@ -25,3 +29,4 @@ class moeoSwapMutation: public eoMonOp<eoJobShop>
 	int nbSwap;
 
 };
+#endif

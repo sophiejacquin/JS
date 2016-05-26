@@ -52,12 +52,12 @@ public:
 	
   EOT generateOffspring( EOT& parent1, EOT & parent2, unsigned int p1, unsigned int p2)
 {
-	EOT result = eoJobShop();
-	
-	result.setN(parent1.getN());
+	EOT result;
+	int N=parent1.getN();
+	result.setN(N);
 	
 	std::vector<bool> taken_values(N, false);
-	vector<int> var;
+	int var;
 	vector<int> liste;
 	
 
@@ -71,7 +71,7 @@ public:
 		else
 		{
 			var = parent1[i];
-			taken_values[var[0]] = true; 
+			taken_values[var] = true; 
 			liste.push_back(var);
 		}
 	}

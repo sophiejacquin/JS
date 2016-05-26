@@ -7,6 +7,10 @@ template<class GenotypeT>
 class Timing: public eoMonOp<GenotypeT>
 {
 public:
+	Timing()
+	{
+		
+	}
 	Timing(Data _data)
 	{
 		data=_data;

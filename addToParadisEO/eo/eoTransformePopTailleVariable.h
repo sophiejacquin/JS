@@ -44,10 +44,7 @@ public:
     mutationProba(_mProba),
     vectMut(),
     mutVecProba(0.0)
-    
-    {
-        
-    }
+    {}
     eoTransformePopTailleVariable()
     : 
     crossoverProba(0),
@@ -116,7 +113,7 @@ private:
     double crossoverProba;
     eoInvalidateMonOp<EOT> mutate;
     double mutationProba;
-    eoVectOp<EOT> & vectMut;
+    eoVectOp<EOT>  vectMut;
     double mutVecProba;
 };
 

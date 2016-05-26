@@ -3,7 +3,7 @@
 
 #include <core/MOEO.h>
 #include <eoFunctor.h>
-#include <moeoJobShopEvalFuncS.h>
+#include "moeoJobShopEvalFuncS.h"
 #include <addToParadisEO/moeo/core/moeoDecoder.h>
 #include "Timing.h"
 
@@ -13,17 +13,17 @@ class moeoJSDecoder : public moeoDecoder<MOEOT, MOEOTX>
  public:
 	
 	typedef typename MOEOT::ObjectiveVector ObjectiveVector;
-	moeoJSDecoder(Timing & t, int Nb_lambda_, moeoJSEvalFunc eval_)
+	moeoJSDecoder(Timing<MOEOTX> & t, int Nb_lambda_, moeoJSEvalFunc<MOEOTX> eval_)
 	{
 		timer=t;
 		nb_lambda=Nb_lambda_;
-		eval=eval_
+		eval=eval_;
 	}
 	void operator () (MOEOT & eo, eoPop<MOEOTX> & popX)
 	{
 		int N=eo.getN();
 		vector<int> jobs=eo.getListeJobs();
-		for(i=0; i<nb_lambda+1;i++)
+		for(unsigned int i=0; i<nb_lambda+1;i++)
 		{
 			MOEOTX eoX;
 			eoX.setN(N);
@@ -36,9 +36,9 @@ class moeoJSDecoder : public moeoDecoder<MOEOT, MOEOTX>
 		}	
 	}
 private :
-	Timing timer;
-	nb_lambda;
-	moeoJSEvalFunc eval;
+	Timing<MOEOTX> timer;
+	int nb_lambda;
+	moeoJSEvalFunc<MOEOTX> eval;
 
 };
 #endif
