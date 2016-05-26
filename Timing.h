@@ -38,7 +38,7 @@ public:
             _genotype.setModif(i,true);
         }
     }
-	void timing(const vector<int> & ordre, vector<int> & temps)
+	void timing(const vector<int> & ordre, vector<int> & temps, double lambda)
 	{
 		
 		int n=data.getN();
@@ -57,8 +57,8 @@ public:
 	
 			int pk=data.getJob(ordre[k-1]).getP();
 			int dk=data.getJob(ordre[k-1]).getD();
-			int alphak=data.getJob(ordre[k-1]).getAlpha();
-			int betak=data.getJob(ordre[k-1]).getBeta();
+			int alphak=lambda*data.getJob(ordre[k-1]).getAlpha();
+			int betak=(1-lambda)*data.getJob(ordre[k-1]).getBeta();
 			int x=C[k-1];
 			if(x<rk)x=rk;
 			x=x+pk-dk;
