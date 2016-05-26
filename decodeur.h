@@ -13,10 +13,11 @@ class moeoJSDecoder : public moeoDecoder<MOEOT, MOEOTX>
  public:
 	
 	typedef typename MOEOT::ObjectiveVector ObjectiveVector;
-	moeoJSDecoder(Timing & t, int Nb_lambda_)
+	moeoJSDecoder(Timing & t, int Nb_lambda_, moeoJSEvalFunc eval_)
 	{
 		timer=t;
 		nb_lambda=Nb_lambda_;
+		eval=eval_
 	}
 	void operator () (MOEOT & eo, eoPop<MOEOTX> & popX)
 	{
@@ -30,12 +31,14 @@ class moeoJSDecoder : public moeoDecoder<MOEOT, MOEOTX>
 			vector<double> time;
 			timer.timing(jobs,time,i/nb_lambda);
 			eoX.setCompletionTime(time);
+			eval(eoX);
 			popX.push_back(eoX);	
 		}	
 	}
 private :
 	Timing timer;
 	nb_lambda;
+	moeoJSEvalFunc eval;
 
 };
 #endif
