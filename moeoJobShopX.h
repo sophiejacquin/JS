@@ -34,11 +34,11 @@ class moeoJobShopX : public moeoRealVector < moeoJobShopXObjectiveVector >, publ
 	{
 		return listeJobs[i];
 	}
-	int getCompletionTime(i)
+	double getCompletionTime(i)
 	{
 		return completionTime[i];
 	}
-	void setCompletionTime(std::vector<int> time_)
+	void setCompletionTime(std::vector<double> time_)
 	{
 		completionTime=time_;
 	}
@@ -56,7 +56,7 @@ class moeoJobShopX : public moeoRealVector < moeoJobShopXObjectiveVector >, publ
 	}
  private:
 	std::vector<int> listeJobs;
-	std::vector<int> completionTime;
+	std::vector<double> completionTime;
 	int N;
 };
 #endif
