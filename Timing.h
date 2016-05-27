@@ -31,9 +31,9 @@ public:
 		*/
 	}
 
-	void timing(const vector<int> & ordre, vector<double> & temps, double lambda)
+	void timing(const vector<int> & ordre, vector<double> & temps, int lambda, int lambda2)
 	{
-		//cout<<lambda;
+		
 		
 		int n=data.getN();
 		vector<double> H;
@@ -51,8 +51,8 @@ public:
 	
 			int pk=data.getJob(ordre[k-1]).getP();
 			int dk=data.getJob(ordre[k-1]).getD();
-			double alphak=lambda*data.getJob(ordre[k-1]).getAlpha();
-			double betak=(1-lambda)*data.getJob(ordre[k-1]).getBeta();
+			int alphak=lambda*data.getJob(ordre[k-1]).getAlpha();
+			int betak=(lambda2)*data.getJob(ordre[k-1]).getBeta();
 			double x=C[k-1];
 			if(x<rk)x=rk;
 			x=x+pk-dk;
