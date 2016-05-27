@@ -23,6 +23,8 @@ class moeoJobShopX : public moeoRealVector < eoJobShopObjectiveVector >, public 
       
      	 	moeoRealVector<eoJobShopObjectiveVector>::printOn(os);
       		os <<this->origin()<< ' '<<endl;
+		for(int i=0;i<N;i++)
+      	 	 os << completionTime[i]<<' ';
     
     	}
     	void readFrom(istream& is)

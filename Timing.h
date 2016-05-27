@@ -58,7 +58,7 @@ public:
 			x=x+pk-dk;
 			if(rk>P) P=rk;
 			P+=pk;
-			int compressionMax=0;
+			double compressionMax=0;
 			if(rk-C[k-1]<0) compressionMax=rk-C[k-1];
 			
 			if(H[lf]<compressionMax)
