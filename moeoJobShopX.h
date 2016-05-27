@@ -22,7 +22,7 @@ class moeoJobShopX : public moeoRealVector < eoJobShopObjectiveVector >, public 
     	{
       
      	 	moeoRealVector<eoJobShopObjectiveVector>::printOn(os);
-      		os << ' ';
+      		os <<this->origin()<< ' '<<endl;
     
     	}
     	void readFrom(istream& is)

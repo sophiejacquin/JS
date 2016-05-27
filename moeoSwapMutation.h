@@ -21,7 +21,11 @@ class moeoSwapMutation: public eoMonOp<eoJobShop>
 	bool operator() (eoJobShop & eo)
 	{
 		eoSwapMutation< vector<int> > mut(nbSwap);
+		
+		
+	
 		mut(eo.getListeJobs()); //si pb reflechir fonction qui renvoie ref...
+			
 		return true;
 	}
 

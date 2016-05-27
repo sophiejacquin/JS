@@ -29,7 +29,7 @@ class moeoJSDecoder : public moeoDecoder<MOEOT, MOEOTX>
 			eoX.setN(N);
 			eoX.setListeJobs(jobs);
 			vector<double> time;
-			timer.timing(jobs,time,i/nb_lambda);
+			timer.timing(jobs,time,double(i)/double(nb_lambda));
 			eoX.setCompletionTime(time);
 			eval(eoX);
 			popX.push_back(eoX);	

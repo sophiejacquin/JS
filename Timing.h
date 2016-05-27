@@ -33,6 +33,7 @@ public:
 
 	void timing(const vector<int> & ordre, vector<double> & temps, double lambda)
 	{
+		//cout<<lambda;
 		
 		int n=data.getN();
 		vector<double> H;

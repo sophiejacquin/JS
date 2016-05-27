@@ -22,7 +22,9 @@ class moeoJobShop : public moeoRealVector < eoJobShopObjectiveVector >, public O
     	{
       
      	 	moeoRealVector<eoJobShopObjectiveVector>::printOn(os);
-      	 	os << ' ';
+		for(int i=0;i<N;i++)
+      	 	 os << listeJobs[i]<<' ';
+		os<< this->origin();
     
     	}
 

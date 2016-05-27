@@ -20,7 +20,9 @@ class moeoInsertMutation: public eoMonOp<eoJobShop>
 		eoShiftMutation< eoVector<double, int> > mut;
 		eoVector<double, int> x;
 		x.value(eo.getListeJobs());
+	
 		mut(x); //si pb reflechir fonction qui renvoie ref...
+		
 		return true;
 	}
 
