@@ -34,12 +34,12 @@ public:
 	void timing(const vector<int> & ordre, vector<double> & temps, int lambda, int lambda2)
 	{
 		
-		
+		cout<<lambda<<" "<<lambda2<<endl;
 		int n=data.getN();
-		vector<double> H;
-		H.push_back(0);
-		double ld=0;double lf=0;
-		vector<double> gamma;
+		vector<int> H ;
+		H.push_back(0.0);
+		int ld=0;int lf=0;
+		vector<int> gamma;
 		gamma.push_back(0);
 		vector<double> C ;
 		C.push_back(0);
@@ -53,6 +53,7 @@ public:
 			int dk=data.getJob(ordre[k-1]).getD();
 			int alphak=lambda*data.getJob(ordre[k-1]).getAlpha();
 			int betak=(lambda2)*data.getJob(ordre[k-1]).getBeta();
+			
 			double x=C[k-1];
 			if(x<rk)x=rk;
 			x=x+pk-dk;
@@ -93,9 +94,10 @@ public:
 			else
 			{
 				
+				
 				double Hnew=H[lf]+x;
 				if(Hnew<0){
-				
+						//cout<<"ici"<<endl;				
 					int newP=lf;
 					while(newP>ld && H[newP-1]<=Hnew)newP=newP-1;
 					
@@ -120,7 +122,7 @@ public:
 				while(gamma[i]<=0 && i>ld)
 				{
 					gamma[i-1]=gamma[i-1]+gamma[i];
-					C[k]=P-H[i];
+					C[k]=P-H[i-1];//change
 					i=i-1;
 					lf--;
 				}

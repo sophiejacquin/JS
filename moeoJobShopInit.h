@@ -27,7 +27,7 @@ class moeoJobShopInit: public eoInit<eoJobShop> {
 	void operator () (eoJobShop & eo)
 	{
    		eo.setN(N);
-		
+		 std::srand ( unsigned ( std::time(0) ) );
 		vector<int> order ;
 		for (int i = 0; i < N; i++)
 		{
@@ -35,7 +35,7 @@ class moeoJobShopInit: public eoInit<eoJobShop> {
 		}
 	
 		random_shuffle ( order.begin(), order.end() );
-
+		
 		eo.setListeJobs(order);
 		eo.invalidate();
 	}
