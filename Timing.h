@@ -54,11 +54,11 @@ public:
 			int alphak=lambda*data.getJob(ordre[k-1]).getAlpha();
 			int betak=(lambda2)*data.getJob(ordre[k-1]).getBeta();
 			int x=C[k-1];
-			//if(x<rk)x=rk;
+			if(x<rk)x=rk;
 			x=x+pk-dk;
-			//if(rk>P) P=rk;
+			if(rk>P) P=rk;
 			P+=pk;
-			/*int compressionMax=0;
+			int compressionMax=0;
 			if(rk-C[k-1]<0) compressionMax=rk-C[k-1];
 			
 			if(H[lf]<compressionMax)
@@ -76,7 +76,7 @@ public:
 					l--;
 				}
 
-			}*/
+			}
 			if(x<=0)
 			{
 				
