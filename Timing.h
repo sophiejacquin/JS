@@ -47,7 +47,7 @@ public:
 		for(int k=1; k<n+1;k++)
 		{
 			
-			int rk=0;//data.getJob(ordre[k-1]).getR();
+			int rk=data.getJob(ordre[k-1]).getR();
 	
 			int pk=data.getJob(ordre[k-1]).getP();
 			int dk=data.getJob(ordre[k-1]).getD();
@@ -66,6 +66,7 @@ public:
 				//cout<<"mise à jour H"<<endl;
 				double diff=H[lf]-compressionMax;
 				int l=lf;
+				
 				while(l>ld-1)
 				{
 					H[l]=H[l]-diff;
@@ -148,7 +149,10 @@ public:
 		temps=C;
 		
 	}
-
+	Data & getData()
+	{
+		return data;
+	}
 
 private:
  

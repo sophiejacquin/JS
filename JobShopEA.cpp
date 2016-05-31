@@ -106,16 +106,16 @@ int main (int argc, char *argv[])
     ////cout << endl;*/
     
    
-    eoTimeContinue< Indi >  continuator(maxtime);
-    eoCheckPoint<Indi> checkpoint (continuator);
-    moeoUnboundedArchive < Indi > arch1;
-    moeoArchiveUpdater<Indi> updater(arch1, pop);
+    eoTimeContinue< IndiX >  continuator(maxtime);
+    //eoCheckPoint<IndiX> checkpoint (continuator);
+    //moeoUnboundedArchive < IndiX > arch1;
+    //moeoArchiveUpdater<Indi> updater(arch1, pop);
     //checkpoint.add(updater);
      //moeoSteadyHyperVolumeContinue<Indi> continuator( 0, 100, hyperVol);
      
     
    	 // build NSGA-II
-        moeoDecodedNSGAII<Indi, IndiX> nsgaII(MAX_GEN, decoder, cross,pCross,mutCombined, pMutCombined);
+        moeoDecodedNSGAII<Indi, IndiX> nsgaII(continuator, decoder, cross,pCross,mutCombined, pMutCombined);
         //moeoNSGAII < Indi > nsgaII (checkpoint, eval, op);
     	// run the algo
         

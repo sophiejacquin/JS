@@ -36,6 +36,7 @@ class moeoJSDecoder : public moeoDecoder<MOEOT, MOEOTX>
 				cout<<"PROBLEMMME !!!"<< eoX.objectiveVector()[0]<<" ,"<<eoX.objectiveVector()[1]<<"\n"<<popX.back().objectiveVector()[0]<<","<<popX.back().objectiveVector()[1]<<" "<<i<<endl;//pourquoi c'est pas ordonné??
 			popX.push_back(eoX);
 			//tests :
+			if (not(eoX.validity(timer.getData()))) cout<<"GROS PB"<<endl;
 				
 		}	
 	}
