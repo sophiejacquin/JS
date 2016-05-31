@@ -3,7 +3,7 @@ using namespace std;
 #include <stdio.h>
 #include <moeo>
 #include <eo>
-
+#include <metric/moeoHyperVolumeMetric.h>
 #include "Data.h"
 #include "moeoJobShopInit.h"
 #include "eoJobShopQuadCrossover.h"
@@ -108,7 +108,7 @@ int main (int argc, char *argv[])
    
     eoTimeContinue< IndiX >  continuator(maxtime);
     //eoCheckPoint<IndiX> checkpoint (continuator);
-    //moeoUnboundedArchive < IndiX > arch1;
+    moeoUnboundedArchive < IndiX > arch;
     //moeoArchiveUpdater<Indi> updater(arch1, pop);
     //checkpoint.add(updater);
      //moeoSteadyHyperVolumeContinue<Indi> continuator( 0, 100, hyperVol);
@@ -119,7 +119,7 @@ int main (int argc, char *argv[])
         //moeoNSGAII < Indi > nsgaII (checkpoint, eval, op);
     	// run the algo
         
-    	nsgaII (pop);
+    	nsgaII (pop,arch);
 
     
 
@@ -127,7 +127,7 @@ int main (int argc, char *argv[])
     make_help(parser);
 
     // extract first front of the final population using an moeoArchive (this is the output of nsgaII)
-	 eoPop <IndiX> popX;
+	/* eoPop <IndiX> popX;
     decoder.decodePop(pop, popX);
     moeoUnboundedArchive < IndiX > arch;
     arch(popX);
@@ -140,17 +140,22 @@ int main (int argc, char *argv[])
                 popX[x].origin(pop[s].origin());
 		popX[x].printOn(cout);}
            
-        }
+        }*/
     // printing of the final population
-    ////cout << "Final Population\n";
-   // arch.printOn(cout);
+    cout << "Final Population\n";
+    arch.sortedPrintOn(cout);
     ////cout << endl;
 
     // printing of the final archive
     //std::////cout << "Final Archive " << std::endl;
     //std::////cout << "sans archive : ";
-    arch.sortedPrintOn(std::cout);
-    ////cout << std::endl;
-    
+	eoJobShopObjectiveVector pointRef(2);
+	pointRef[0]=0; pointRef[1]=1;
+	moeoHyperVolumeMetric<eoJobShopObjectiveVector> hyperVol(false,pointRef);
+	vector<eoJobShopObjectiveVector> res;
+    for(int i=0;i<arch.size();i++)
+        res.push_back(arch[i].objectiveVector());
+   
+     cout<<"air de l'hypervolume :"<<-1*hyperVol(res)<<endl;
     return EXIT_SUCCESS;
 }

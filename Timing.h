@@ -119,11 +119,11 @@ public:
 				} 
 				gamma[lf]-=betak;
 				int i=lf;
-				C.push_back(P-H[i]); //à  verif là aussi
-				while(gamma[i]<=0 && i>ld)
+				C.push_back(P-H[i]); 
+				while(gamma[i]<0 && i>ld)//inégalité remplacée par inégalité stricte
 				{
 					gamma[i-1]=gamma[i-1]+gamma[i];
-					C[k]=P-H[i-1];//là
+					C[k]=P-H[i-1];
 					i=i-1;
 					lf--;
 				}
