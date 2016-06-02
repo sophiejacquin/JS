@@ -29,7 +29,22 @@ eoPop<Indi>&  make_pop(eoParser& _parser, eoState& _state, eoInit<Indi> & _init)
 // checks for help demand, and writes the status file
 // and make_help; in libutils
 void make_help(eoParser & _parser);
-
+eoJobShopObjectiveVector choixPointRef(Data & data)
+{
+	eoJobShopObjectiveVector pointRef(2);
+	pointRef[0]=0;
+	pointRef[1]=0;
+	int N=data.getN();
+	for (unsigned int i=0; i<N;i++)
+	{
+		int d=data.getJob(i).getD();
+		int alpha=data.getJob(i).getAlpha();
+		int betta=data.getJob(i).getBeta();
+		pointRef[0]+=alpha*d;
+		pointRef[1]+=betta*d;
+	}
+	return pointRef;
+}
 
 // main
 int main (int argc, char *argv[])
@@ -149,8 +164,9 @@ int main (int argc, char *argv[])
     // printing of the final archive
     //std::////cout << "Final Archive " << std::endl;
     //std::////cout << "sans archive : ";
-	eoJobShopObjectiveVector pointRef(2);
-	pointRef[0]=0; pointRef[1]=1;
+//POUR IRACE:
+	eoJobShopObjectiveVector pointRef=choixPointRef( data);
+	cout<<pointRef[0]<<" "<<pointRef[1]<<endl;
 	moeoHyperVolumeMetric<eoJobShopObjectiveVector> hyperVol(false,pointRef);
 	vector<eoJobShopObjectiveVector> res;
     for(int i=0;i<arch.size();i++)
