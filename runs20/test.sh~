@@ -1,0 +1,48 @@
+#!/bin/bash
+#sleep 7200
+
+
+i=1
+s=1
+while [ $i -le 20 ]; do 
+var=test${i}
+../JobShopEA  --inputFile="/home/jacquin/Documents/JSMulti/DataOneMachine/bky20/bky20_60.txt" --pCross=0.9094  --pMutCombined=0.9014 --pMut1=0.096 --pMut=0.5698 --popSize=18 --nb_lambda=5 -t20 --seed=$s>>"TestI1/$var" 
+let $[ s+=100 ]
+let $[ i+=1 ] # incremente i de 1 a chaque boucle 
+done
+
+i=1
+s=1
+while [ $i -le 20 ]; do 
+var=test${i}
+../JobShopEA  --inputFile="/home/jacquin/Documents/JSMulti/DataOneMachine/bky20/bky20_120.txt" --pCross=0.9094  --pMutCombined=0.9014 --pMut1=0.096 --pMut=0.5698 --popSize=18 --nb_lambda=5 -t20 --seed=$s>>"TestI2/$var" 
+let $[ s+=100 ]
+let $[ i+=1 ] # incremente i de 1 a chaque boucle 
+done
+
+i=1
+s=1
+while [ $i -le 20 ]; do 
+var=test${i}
+../JobShopEA  --inputFile="/home/jacquin/Documents/JSMulti/DataOneMachine/bky20/bky20_180.txt" --pCross=0.9094  --pMutCombined=0.9014 --pMut1=0.096 --pMut=0.5698 --popSize=18 --nb_lambda=5 -t20 --seed=$s>>"TestI3/$var" 
+let $[ s+=100 ]
+let $[ i+=1 ] # incremente i de 1 a chaque boucle 
+done
+
+i=1
+s=1
+while [ $i -le 20 ]; do 
+var=test${i}
+../JobShopEA  --inputFile="/home/jacquin/Documents/JSMulti/DataOneMachine/bky20/bky20_240.txt" --pCross=0.9094  --pMutCombined=0.9014 --pMut1=0.096 --pMut=0.5698 --popSize=18 --nb_lambda=5 -t20 --seed=$s>>"TestI4/$var" 
+let $[ s+=100 ]
+let $[ i+=1 ] # incremente i de 1 a chaque boucle 
+done
+
+i=1
+s=1
+while [ $i -le 20 ]; do 
+var=test${i}
+../JobShopEA  --inputFile="/home/jacquin/Documents/JSMulti/DataOneMachine/bky20/bky20_300.txt" --pCross=0.9094  --pMutCombined=0.9014 --pMut1=0.096 --pMut=0.5698 --popSize=18 --nb_lambda=5 -t20 --seed=$s>>"TestI5/$var" 
+let $[ s+=100 ]
+let $[ i+=1 ] # incremente i de 1 a chaque boucle 
+done
