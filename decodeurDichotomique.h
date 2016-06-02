@@ -53,7 +53,8 @@ class moeoJSDecoderDichotomique : public moeoDecoder<MOEOT, MOEOTX>
 		vector<bool> censure(nb_lambda,false);
 		if(point1[0]==point0[0])
 			censure[0]=true;
-		for(unsigned int i=1; i<nb_lambda;i++)
+		unsigned int i=1;
+		while( i<nb_lambda)
 		{
 
 	   		int dmax=0;
@@ -88,8 +89,10 @@ class moeoJSDecoderDichotomique : public moeoDecoder<MOEOT, MOEOTX>
 			point.push_back(eoX.objectiveVector()[0],eoX.objectiveVector()[1]);
 			if(point[0]==points[ptselec][0]|| point[0]==points[ptselec+1][0])
 				censure[ptselect]=true;
-			else
+			else{
 				points.insert(points.begin()+ptselec+1,point);
+				i++;
+			}
 			
 				
 		}	
