@@ -13,7 +13,7 @@ class moeoJSDecoderDichotomique : public moeoDecoder<MOEOT, MOEOTX>
  public:
 	
 	typedef typename MOEOT::ObjectiveVector ObjectiveVector;
-	moeoJSDecoderDichotmique(Timing<MOEOTX> & t, int Nb_lambda_, moeoJSEvalFunc<MOEOTX> eval_)
+	moeoJSDecoderDichotomique(Timing<MOEOTX> & t, int Nb_lambda_, moeoJSEvalFunc<MOEOTX> eval_)
 	{
 		timer=t;
 		nb_lambda=Nb_lambda_;
@@ -21,7 +21,7 @@ class moeoJSDecoderDichotomique : public moeoDecoder<MOEOT, MOEOTX>
 	}
 	void operator () (MOEOT & eo, eoPop<MOEOTX> & popX)
 	{
-		vector<vector<int>>points;
+		vector< vector<int> >points;
 		int N=eo.getN();
 		vector<int> jobs=eo.getListeJobs();
 
@@ -64,18 +64,18 @@ class moeoJSDecoderDichotomique : public moeoDecoder<MOEOT, MOEOTX>
 		
 				int dpts=(points[pt][0]-points[pt+1][0])*(points[pt][0]-points[pt+1][0])+(points[pt][1]-points[pt+1][1])*(points[pt][1]-points[pt+1][1]);
 		
-				if(dpts>=dmax && not(censure(pt)))
+				if(dpts>=dmax && not(censure[pt]))
 				{
 					dmax=dpts;
 					ptselec=pt;
 				}
 	   		}
 		
-           		if(ptselect==-1)
+           		if(ptselec==-1)
 				break;
 			
-	   		int alpha1=(points[ptselec+1][1]-points[ptselec][1])
-			int alpha2((points[ptselec][0]-points[ptselec+1][0]);
+	   		int alpha1=(points[ptselec+1][1]-points[ptselec][1]);
+			int alpha2=(points[ptselec][0]-points[ptselec+1][0]);
 			MOEOTX eoX;
 			eoX.setN(N);
 			eoX.setListeJobs(jobs);
@@ -88,7 +88,7 @@ class moeoJSDecoderDichotomique : public moeoDecoder<MOEOT, MOEOTX>
 			vector<int> point;
 			point.push_back(eoX.objectiveVector()[0],eoX.objectiveVector()[1]);
 			if(point[0]==points[ptselec][0]|| point[0]==points[ptselec+1][0])
-				censure[ptselect]=true;
+				censure[ptselec]=true;
 			else{
 				points.insert(points.begin()+ptselec+1,point);
 				i++;

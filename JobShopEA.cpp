@@ -17,6 +17,7 @@ using namespace std;
 #include "moeoJobShopEvalFuncS.h"//en fait X...
 #include "decodeur.h"
 #include<addToParadisEO/moeo/algo/moeoDecodedNSGAII.h>
+#include"decodeurDichotomique.h"
 
 typedef moeoJobShop Indi;
 typedef moeoJobShopX IndiX;
