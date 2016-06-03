@@ -21,7 +21,7 @@ class moeoJSDecoderDichotomique : public moeoDecoder<MOEOT, MOEOTX>
 	}
 	void operator () (MOEOT & eo, eoPop<MOEOTX> & popX)
 	{
-		vector< vector<int> >points;
+		vector< vector<double> >points;
 		int N=eo.getN();
 		vector<int> jobs=eo.getListeJobs();
 
@@ -30,11 +30,12 @@ class moeoJSDecoderDichotomique : public moeoDecoder<MOEOT, MOEOTX>
 		eoX0.setListeJobs(jobs);
 		vector<double> time0;
 		timer.timing(jobs,time0, 0, 1);
-		eoX0.setCompletionTime(time);
+		eoX0.setCompletionTime(time0);
 		eval(eoX0);
 		popX.push_back(eoX0);
-		vector<int> point0;
-		point0.push_back(eoX0.objectiveVector()[0],eoX0.objectiveVector()[1]);
+		vector<double> point0;
+		point0.push_back(eoX0.objectiveVector()[0]);
+		point0.push_back(eoX0.objectiveVector()[1]);
 		points.push_back(point0);
 		
 
@@ -43,11 +44,12 @@ class moeoJSDecoderDichotomique : public moeoDecoder<MOEOT, MOEOTX>
 		eoX1.setListeJobs(jobs);
 		vector<double> time1;
 		timer.timing(jobs,time1, 1, 0);
-		eoX1.setCompletionTime(time);
+		eoX1.setCompletionTime(time1);
 		eval(eoX1);
 		popX.push_back(eoX1);
-		vector<int> point1;
-		point1.push_back(eoX1.objectiveVector()[0],eoX1.objectiveVector()[1]);
+		vector<double> point1;
+		point1.push_back(eoX1.objectiveVector()[0]);
+		point1.push_back(eoX1.objectiveVector()[1]);
 		points.push_back(point1);
 		popX.push_back(eoX1);
 		vector<bool> censure(nb_lambda,false);
@@ -85,8 +87,9 @@ class moeoJSDecoderDichotomique : public moeoDecoder<MOEOT, MOEOTX>
 			eval(eoX);
 			popX.push_back(eoX);
 
-			vector<int> point;
-			point.push_back(eoX.objectiveVector()[0],eoX.objectiveVector()[1]);
+			vector<double> point;
+			point.push_back(eoX.objectiveVector()[0]);
+			point.push_back(eoX.objectiveVector()[1]);
 			if(point[0]==points[ptselec][0]|| point[0]==points[ptselec+1][0])
 				censure[ptselec]=true;
 			else{

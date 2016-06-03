@@ -75,7 +75,7 @@ int main (int argc, char *argv[])
     // turn that object into an evaluation counter
     eoEvalFuncCounter<IndiX> eval(plainEval);
     Timing<IndiX> timer(data);
-    moeoJSDecoder<Indi,IndiX> decoder(timer,nb_lambda, plainEval);
+    moeoJSDecoderDichotomique<Indi,IndiX> decoder(timer,nb_lambda, plainEval);
     moeoJobShopInit<Indi> init(data);
 
     // A (first) crossover (possibly use the parser in its Ctor)
