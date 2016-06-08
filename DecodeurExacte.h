@@ -10,6 +10,7 @@ template < class MOEOT, class MOEOTX >
 typedef struct
    {
    	int Jobdeb;
+	int derAvance;
 	int Jobfin;
 	double val;
    } Bloc;
@@ -28,11 +29,11 @@ class moeoJSDecoderExacte : public moeoDecoder<MOEOT, MOEOTX>
 	{
 		
 	}
-	int calculT(vector< Bloc> & blocs, MOEOTX & eoX, int numBloc, int blocPred)
+	int calculT(vector< Bloc> & blocs, MOEOTX & eoX, int numBloc, int blocPred, vector <bool> & estBloque)
 	{
 		
 	}
-	int choixBloc(vector< Bloc> & blocs,MOEOTX & eoX)
+	int choixBloc(vector< Bloc> & blocs, vector <bool> & estBloque)
 	{
 		double valMax= 0;
 		int choix=-1;
@@ -40,10 +41,10 @@ class moeoJSDecoderExacte : public moeoDecoder<MOEOT, MOEOTX>
 
 		for ( unsigned i =0; i<s;i++)
 		{
-			int t=eoX.getCompletionTime(numBloc.Jobdeb)- data.getJob(eoX.getJob(numBloc.Jobdeb)).getP() - data.getJob(eoX.getJob(numBloc.Jobdeb)).getR();
+			
 
 		
-			if (t>0 && blocs[i].val>valMax)
+			if (not(estBloque(i) && blocs[i].val>valMax)
 			{
 				valMax=blocs[i].val;
 				choix=i;
