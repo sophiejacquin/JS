@@ -26,22 +26,30 @@ class moeoJSDecoderExacte : public moeoDecoder<MOEOT, MOEOTX>
 	}
 	void bougerBloc(vector< Bloc> & blocs, MOEOTX & eoX, int numBloc)
 	{
+		
 	}
-	int choixBloc(vector< Bloc> & blocs)
+	int calculT(vector< Bloc> & blocs, MOEOTX & eoX, int numBloc, int blocPred)
 	{
-		double valMax= blocs[0].val;
-		int choix=0;
+		
+	}
+	int choixBloc(vector< Bloc> & blocs,MOEOTX & eoX)
+	{
+		double valMax= 0;
+		int choix=-1;
 		int s=blocs.size();
-		for ( unsigned i =1; i<s;i++)
+
+		for ( unsigned i =0; i<s;i++)
 		{
-			if (blocs[i].val>valMax)
+			int t=eoX.getCompletionTime(numBloc.Jobdeb)- data.getJob(eoX.getJob(numBloc.Jobdeb)).getP() - data.getJob(eoX.getJob(numBloc.Jobdeb)).getR();
+
+		
+			if (t>0 && blocs[i].val>valMax)
 			{
 				valMax=blocs[i].val;
 				choix=i;
 			}
 		}
-		if(valMax==0)
-			choix=-1;
+		
 		return choix;
 	}
 	int blocPred(vector< Bloc> & blocs, int numBloc)
