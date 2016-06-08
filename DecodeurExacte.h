@@ -13,6 +13,7 @@ typedef struct
 	int derAvance;
 	int Jobfin;
 	double val;
+	bool bloque;
    } Bloc;
 class moeoJSDecoderExacte : public moeoDecoder<MOEOT, MOEOTX>
 {
@@ -29,11 +30,11 @@ class moeoJSDecoderExacte : public moeoDecoder<MOEOT, MOEOTX>
 	{
 		
 	}
-	int calculT(vector< Bloc> & blocs, MOEOTX & eoX, int numBloc, int blocPred, vector <bool> & estBloque)
+	int calculT(vector< Bloc> & blocs, MOEOTX & eoX, int numBloc, int blocPred)
 	{
 		
 	}
-	int choixBloc(vector< Bloc> & blocs, vector <bool> & estBloque)
+	int choixBloc(vector< Bloc> & blocs)
 	{
 		double valMax= 0;
 		int choix=-1;
@@ -41,10 +42,8 @@ class moeoJSDecoderExacte : public moeoDecoder<MOEOT, MOEOTX>
 
 		for ( unsigned i =0; i<s;i++)
 		{
-			
 
-		
-			if (not(estBloque(i) && blocs[i].val>valMax)
+			if (not(blocs[i].bloque) && blocs[i].val>valMax)
 			{
 				valMax=blocs[i].val;
 				choix=i;
