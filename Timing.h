@@ -31,7 +31,7 @@ public:
 		*/
 	}
 
-	void timing(const vector<int> & ordre, vector<double> & temps, int lambda, int lambda2)
+	void timing(const vector<int> & ordre, vector<double> & temps, double lambda, double lambda2)
 	{
 		
 		
@@ -39,7 +39,7 @@ public:
 		vector<int> H;
 		H.push_back(0);
 		int ld=0;int lf=0;
-		vector<int> gamma;
+		vector<double> gamma;
 		gamma.push_back(0);
 		vector<double> C ;
 		C.push_back(0);
@@ -51,14 +51,14 @@ public:
 	
 			int pk=data.getJob(ordre[k-1]).getP();
 			int dk=data.getJob(ordre[k-1]).getD();
-			int alphak=lambda*data.getJob(ordre[k-1]).getAlpha();
-			int betak=(lambda2)*data.getJob(ordre[k-1]).getBeta();
-			int x=C[k-1];
+			double alphak=lambda*data.getJob(ordre[k-1]).getAlpha();
+			double betak=(lambda2)*data.getJob(ordre[k-1]).getBeta();
+			double x=C[k-1];
 			if(x<rk)x=rk;
 			x=x+pk-dk;
 			if(rk>P) P=rk;
 			P+=pk;
-			int compressionMax=0;
+			double compressionMax=0;
 			if(rk-C[k-1]<0) compressionMax=rk-C[k-1];
 			
 			if(H[lf]<compressionMax)

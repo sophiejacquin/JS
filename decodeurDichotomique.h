@@ -46,7 +46,6 @@ class moeoJSDecoderDichotomique : public moeoDecoder<MOEOT, MOEOTX>
 		timer.timing(jobs,time1, 1, 0);
 		eoX1.setCompletionTime(time1);
 		eval(eoX1);
-		popX.push_back(eoX1);
 		vector<double> point1;
 		point1.push_back(eoX1.objectiveVector()[0]);
 		point1.push_back(eoX1.objectiveVector()[1]);
@@ -75,7 +74,7 @@ class moeoJSDecoderDichotomique : public moeoDecoder<MOEOT, MOEOTX>
 		
            		if(ptselec==-1)
 				break;
-			
+			cout<<ptselec<< " "<<points[ptselec][0]<<endl;
 	   		int alpha1=(points[ptselec+1][1]-points[ptselec][1]);
 			int alpha2=(points[ptselec][0]-points[ptselec+1][0]);
 			MOEOTX eoX;
@@ -85,16 +84,18 @@ class moeoJSDecoderDichotomique : public moeoDecoder<MOEOT, MOEOTX>
 			timer.timing(jobs,time, alpha1, alpha2);
 			eoX.setCompletionTime(time);
 			eval(eoX);
-			popX.push_back(eoX);
+			
 
 			vector<double> point;
 			point.push_back(eoX.objectiveVector()[0]);
 			point.push_back(eoX.objectiveVector()[1]);
 			if(point[0]==points[ptselec][0]|| point[0]==points[ptselec+1][0])
-				censure[ptselec]=true;
+				{censure[ptselec]=true;
+				cout<<"là "<<i <<endl;}
 			else{
 				points.insert(points.begin()+ptselec+1,point);
 				i++;
+				popX.push_back(eoX);
 			}
 			
 				
