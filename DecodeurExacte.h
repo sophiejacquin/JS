@@ -24,11 +24,25 @@ class moeoJSDecoderExacte : public moeoDecoder<MOEOT, MOEOTX>
 	MOEOTX initSol_et_blocs(vector<int> & ordre,vector< Bloc> & blocs)
 	{
 	}
-	bool bougerBloc(vector< Bloc> & blocs, MOEOTX & eoX, int numBloc)
+	void bougerBloc(vector< Bloc> & blocs, MOEOTX & eoX, int numBloc)
 	{
 	}
 	int choixBloc(vector< Bloc> & blocs)
 	{
+		double valMax= blocs[0].val;
+		int choix=0;
+		int s=blocs.size();
+		for ( unsigned i =1; i<s;i++)
+		{
+			if (blocs[i].val>valMax)
+			{
+				valMax=blocs[i].val;
+				choix=i;
+			}
+		}
+		if(valMax==0)
+			choix=-1;
+		return choix;
 	}
 	int blocPred(vector< Bloc> & blocs, int numBloc)
 	{
