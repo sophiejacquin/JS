@@ -32,7 +32,26 @@ class moeoJSDecoderExacte : public moeoDecoder<MOEOT, MOEOTX>
 	}
 	int calculT(vector< Bloc> & blocs, MOEOTX & eoX, int numBloc, int blocPred)
 	{
+		int tempsDebBloc= eoX.getCompletionTime(blocs[numBloc].Jobdeb)-data.getJob(eoX.getJob(blocs[numBloc].Jobdeb)).detP();
+		int t=tempsDebBloc;
+		if( blocPred>-1)
+			t=t-eoX.getCompletionTime(blocs[blocPred].Jobfin);
+		for(unsigned i=derAvance+1; i<=Jobfin;i++)
+		{
+			int ecartD=eoX.getCompletionTime(i)-data.getJob(eoX.getJob(i)).detP()-data.getJob(eoX.getJob(i)).detD();
+			if (ecartD<t)
+				t=ecartD;
+		}
+		for(unsigned i=0; i<derAvance+1; i++)
+		{
+			int ecartR=eoX.getCompletionTime(i)-data.getJob(eoX.getJob(i)).detP()-data.getJob(eoX.getJob(i)).detR();
+			if (ecartR<t){
+				t=ecartD;
+				blocs[numBloc].bloque=true;}
+		}
+		return t;
 		
+			
 	}
 	int choixBloc(vector< Bloc> & blocs)
 	{
