@@ -28,7 +28,104 @@ class moeoJSDecoderExacte : public moeoDecoder<MOEOT, MOEOTX>
 	}
 	void bougerBloc(vector< Bloc> & blocs, MOEOTX & eoX, int numBloc)
 	{
+		int blocPred=blocPred( blocs, numBloc);
+		int t =calculT( blocs, eoX, numBloc, blocPred);
 		
+		//decolage du bloc de droite si besoin
+		if(numBloc<blocs.size()-1 && blocs[numBloc].Jobdeb=blocs[numBloc+1].Jobdeb)
+		{
+			blocs[numBloc+1].Jobdeb=blocs[numBloc].Jobfin+1;
+			blocs[numBloc+1].derAvance=blocs[numBloc+1].Jobdeb;
+			int i =blocs[numBloc+1].Jobdeb;
+			while(i<=blocs[numBloc+1].Jobfin && eoX.getCompletionTime(i) -data.getJob(eoX.getJob(i)).getD()<=0)
+			{
+				blocs[numBloc+1].derAvance=i;
+				i++;
+			}
+		}
+		//fusion bloc gauche si necessaire
+		
+		for(unsigned int i=blocs[numBloc].Jobdeb; i <=blocs[numBloc].Jobfin;i++)
+		{
+			int C=eoX.getCompletionTime(i)-t;
+			eoX.setCompletionTime(i,C);
+			
+			
+		}
+		erase_sous_blocs(numBloc,blocs);
+		if(eoX.getCompletionTime(blocs[blocPred].Jobfin)==eoX.getCompletionTime(blocs[numBloc].Jobdeb)-data.getJob(eoX.getJob(blocs[numBloc].Jobdeb)).getP())
+		{
+			if(blocs[blocPred].bloque)
+			{
+				blocs[blocPred].Jobfin=blocs[numBloc].Jobfin;
+				blocs.erase (blocs.begin()+numBloc);
+				numBloc--;
+			}
+			else if(blocs[blocPred].val==0 )
+			{
+				blocs[blocPred].bloque=blocs[numBloc].bloque;
+				blocs[blocPred].Jobfin=blocs[numBloc].Jobfin;
+				blocs.erase (blocs.begin()+numBloc);
+				numBloc--;
+			}
+			else if(not(blocs[numBloc].bloque) && blocs[numBloc-1].val>0)
+			{
+				blocs[blocPred].Jobfin=blocs[numBloc].Jobfin;
+				blocs[numBloc].Jobdeb=blocs[blocPred].Jobdeb;
+			}
+			
+		}
+		construire_sous_blocs(numBloc, deb,blocs);
+		
+		
+	}
+	void erase_sous_blocs(int & num,vector< Bloc> & blocs)
+	{
+		int i=0;
+		while(blocs[i].Jobdeb<=blocs[num].Jobdeb and i<num)
+		{
+			if(blocs[i].Jobdeb==blocs[num].Jobdeb)
+			{
+				blocs.erase (blocs.begin()+i);
+				num--;
+			}
+		}
+	}
+	void construire_sous_blocs(int num, int deb, vector< Bloc> & blocs, MOEOTX & eoX)
+	{
+		int place=num;
+		int fin=blocs[num].Jobfin;
+		int i =deb
+		bool bloque=false;
+		while(i<fin)
+		{
+			Bloc b;
+			b.Jobdeb=i;
+			derAvance=i;
+			while(not(bloque) && (eoX.getCompletionTime(derAvance)-data.getJob(eoX.getJob(derAvance)).getD())<=0)
+			{
+				
+				if(eoX.getCompletionTime(derAvance)-data.getJob(eoX.getJob(derAvance)).getR()==0)
+					bloque=true;
+				else derAvance++;
+			}
+			b.derAvance=derAvance;
+			i=derAvance+1;
+			if (bloque){
+				b.Jobfin=fin;
+				b.bloque=true;
+				i=fin;
+			}
+			else{
+				while(i<data.getN() && not((eoX.getCompletionTime(i)-data.getJob(eoX.getJob(i)).getD())<=0) or not(eoX.getCompletionTime(i)-data.getJob(eoX.getJob(i)).getR()) )
+				{
+					i++;
+				
+				}
+				b.Jobfin=i-1;
+			}
+			blocs.insert(blocs.begin()+place,b); place+=1;
+		}
 	}
 	int calculT(vector< Bloc> & blocs, MOEOTX & eoX, int numBloc, int blocPred)
 	{
@@ -36,18 +133,19 @@ class moeoJSDecoderExacte : public moeoDecoder<MOEOT, MOEOTX>
 		int t=tempsDebBloc;
 		if( blocPred>-1)
 			t=t-eoX.getCompletionTime(blocs[blocPred].Jobfin);
-		for(unsigned i=derAvance+1; i<=Jobfin;i++)
+		for(unsigned i=0; i<blocs[numBloc].jobfin+1; i++)
 		{
 			int ecartD=eoX.getCompletionTime(i)-data.getJob(eoX.getJob(i)).detP()-data.getJob(eoX.getJob(i)).detD();
 			if (ecartD<t)
 				t=ecartD;
-		}
-		for(unsigned i=0; i<derAvance+1; i++)
-		{
+		
+		
 			int ecartR=eoX.getCompletionTime(i)-data.getJob(eoX.getJob(i)).detP()-data.getJob(eoX.getJob(i)).detR();
 			if (ecartR<t){
-				t=ecartD;
-				blocs[numBloc].bloque=true;}
+				t=ecartR;
+				if (i<=blocs[numBloc].derAvance)
+					 blocs[numBloc].bloque=true;
+			}
 		}
 		return t;
 		
