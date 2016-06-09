@@ -105,9 +105,16 @@ class moeoJSDecoderExacte : public moeoDecoder<MOEOT, MOEOTX>
 			}
 		}
 		eoX.setCompletionTime(completionTime);
-		//TODO :création des sous blocs :
 		
-
+		int nbGrosBlocs=blocs.size();
+		int gap=0;
+		int taillePred=nbGrosBlocs;
+		for(i=0;i<nbGrosBlocs;i++)
+		{
+			construire_sous_blocs(i+gap, blocs[i+gap].Jobdeb, blocs, eoX);
+			gap=blocs.size()-taillePred;
+			taillePred=blocs.size();
+		}
 		
 		
 		
