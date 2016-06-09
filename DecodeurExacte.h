@@ -13,6 +13,8 @@ typedef struct
 	int derAvance;
 	int Jobfin;
 	double val;
+	int earli;
+	int tardi;
 	bool bloque;
    } Bloc;
 class moeoJSDecoderExacte : public moeoDecoder<MOEOT, MOEOTX>
@@ -25,6 +27,92 @@ class moeoJSDecoderExacte : public moeoDecoder<MOEOT, MOEOTX>
 	}
 	MOEOTX initSol_et_blocs(vector<int> & ordre,vector< Bloc> & blocs)
 	{
+		MOEOTX eoX;
+		eoX.setN(data.getN());
+		eoX.setListeJobs(ordre);
+		vector<double> completionTime;
+		int r0=data.getJob(ordre[0]).getR();
+		int p0=data.getJob(ordre[0]).getP();
+		int d0=data.getJob(ordre[0]).getD();
+		Bloc b;
+		b.Jobdeb=0;
+		b.Jobfin=0;
+		b.derAvance=0;
+		b.earli=data.getJob(ordre[0]).getalpha();
+		if(d0<r0+p0)
+		{
+			completionTime.push_back(r0+p0);
+			b.tardi=data.getJob(ordre[0]).getBeta();
+			b.bloque=true;
+		}
+		else
+		{
+			completionTime.push_back(d0);
+			b.tardi=0;
+			b.bloque=false;
+		}
+		b.val=b.tardi/b.earli;
+		blocs.push_back(b);
+		for(unsigned int i=1; i<ordre.size();i++)
+		{
+			int r=data.getJob(ordre[i]).getR();
+			int p=data.getJob(ordre[i]).getP();
+			int d=data.getJob(ordre[i]).getD();
+			double C=completionTime[i-1];
+			if(d>C+p and d > r+p)
+			{
+				Bloc b;
+				b.Jobdebut=i;
+				b.Jobfin=i;
+				b.derAvance=i;
+				b.earli=data.getJob(ordre[i]).getalpha();
+				b.tardi=0;
+				blocs.push_bach(b);
+				completionTime.push(d);
+				b.bloque=false;
+				blocs.push_back(b);
+			}
+			else if(C+p > r+p)
+			{
+				blocs[blocs.size()-1].Jobfin=i;
+				if(C+p==d)
+				{
+					blocs[blocs.size()-1].earli+=data.getJob(ordre[i]).getalpha();
+					blocs[blocs.size()-1].derAvance=i;
+					
+				}
+				else
+				{
+					blocs[blocs.size()-1].tardi+=data.getJob(ordre[i]).getBeta();
+				}
+				blocs[blocs.size()-1].val=blocs[blocs.size()-1].tardi/blocs[blocs.size()-1].earli;
+				completionTime.push(C+p);
+			}
+			else //creation d'un nouveau bloc bloqué
+			{
+				Bloc b;
+				b.Jobdebut=i;
+				b.Jobfin=i;
+				b.derAvance=i;
+				b.bloque=true;
+				b.early=1;
+				b.tardy=0;
+				b.val=0;
+				blocs.push_back(b);
+				completionTime.push(r+p);
+				
+					
+			}
+		}
+		eoX.setCompletionTime(completionTime);
+		//TODO :création des sous blocs :
+		
+
+		
+		
+		
+		return eoX;
+		
 	}
 	void bougerBloc(vector< Bloc> & blocs, MOEOTX & eoX, int numBloc)
 	{
@@ -77,7 +165,7 @@ class moeoJSDecoderExacte : public moeoDecoder<MOEOT, MOEOTX>
 		}
 		construire_sous_blocs(numBloc, deb,blocs);
 		
-		
+		//TODO :calcul valeurs des blocs!!!!
 	}
 	void erase_sous_blocs(int & num,vector< Bloc> & blocs)
 	{
