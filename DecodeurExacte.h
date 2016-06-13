@@ -186,10 +186,11 @@ class moeoJSDecoderExacte : public moeoDecoder<MOEOT, MOEOTX>
 				blocs.erase (blocs.begin()+numBloc);
 				numBloc--;
 			}
-			else if(not(blocs[numBloc].bloque) && blocs[numBloc-1].val>0)
+			else if(not(blocs[numBloc].bloque) && blocs[numBloc-1].val>0)//peut etre probleme au découpage ici
 			{
 				//blocs[blocPred].Jobfin=blocs[numBloc].Jobfin;
 				blocs[numBloc].Jobdeb=blocs[blocPred].Jobdeb;
+				
 			}
 			
 		}
@@ -222,7 +223,9 @@ class moeoJSDecoderExacte : public moeoDecoder<MOEOT, MOEOTX>
 		cout<<"deb construire sous bloc"<<endl;
 		int place=num;
 		int fin=blocs[num].Jobfin;
+		int da=blocs[num].derAvance;
 		int i =deb;
+		int debut=blocs[num].Jobdeb;
 		bool bloque=false;
 		int earli=0;
 		int tardi=0;
@@ -230,11 +233,11 @@ class moeoJSDecoderExacte : public moeoDecoder<MOEOT, MOEOTX>
 		while(i<=fin and not(bloque))
 		{
 			Bloc b;
-			b.Jobdeb=deb;
+			b.Jobdeb=debut;
 			int derAvance=i;
 			if(eoX.getCompletionTime(derAvance)-data.getJob(eoX.getJob(derAvance)).getP()-data.getJob(eoX.getJob(derAvance)).getR()==0)
 				bloque=true;
-			while(not(bloque) && (eoX.getCompletionTime(derAvance)-data.getJob(eoX.getJob(derAvance)).getD())<=0)
+			while(derAvance<=fin && not(bloque) && (eoX.getCompletionTime(derAvance)-data.getJob(eoX.getJob(derAvance)).getD())<=0)
 			{
 				earli+=data.getJob(eoX.getJob(derAvance)).getAlpha();
 				if(eoX.getCompletionTime(derAvance)-data.getJob(eoX.getJob(derAvance)).getP()-data.getJob(eoX.getJob(derAvance)).getR()==0)
@@ -244,7 +247,7 @@ class moeoJSDecoderExacte : public moeoDecoder<MOEOT, MOEOTX>
 			 cout<<"derAvance "<<derAvance-1<<" "<<eoX.getCompletionTime(derAvance)-data.getJob(eoX.getJob(derAvance)).getD()<<" D "<<data.getJob(eoX.getJob(derAvance)).getD()<< " R "<<data.getJob(eoX.getJob(derAvance)).getR()<<" P "<<data.getJob(eoX.getJob(derAvance)).getP()<<" C "<<eoX.getCompletionTime(derAvance)<<" i : "<<i<<" fin : "<<fin<<endl;
 
 			
-			b.derAvance=derAvance-1;
+			b.derAvance=da;
 			
 			if (bloque){
 				b.Jobfin=fin;
@@ -254,9 +257,9 @@ class moeoJSDecoderExacte : public moeoDecoder<MOEOT, MOEOTX>
 				
 			}
 			else{
-				i=b.derAvance+1;
+				i=derAvance;
 				b.bloque=false;
-				while(i<data.getN() && not((eoX.getCompletionTime(i)-data.getJob(eoX.getJob(i)).getD())<=0) and not(eoX.getCompletionTime(i)-data.getJob(eoX.getJob(i)).getP()-data.getJob(eoX.getJob(i)).getR()==0) )			
+				while(i<fin+1 && not((eoX.getCompletionTime(i)-data.getJob(eoX.getJob(i)).getD())<=0) and not(eoX.getCompletionTime(i)-data.getJob(eoX.getJob(i)).getP()-data.getJob(eoX.getJob(i)).getR()==0) )			
 				{
 					tardi+=data.getJob(eoX.getJob(i)).getBeta();
 					i++;
@@ -291,6 +294,8 @@ class moeoJSDecoderExacte : public moeoDecoder<MOEOT, MOEOTX>
 	int calculT(vector< Bloc> & blocs, MOEOTX & eoX, int numBloc, int blocPred)
 	{
 		cout<<"deb calcul T"<<endl;
+
+		bool bloque=false;
 		int tempsDebBloc= eoX.getCompletionTime(blocs[numBloc].Jobdeb)-data.getJob(eoX.getJob(blocs[numBloc].Jobdeb)).getP();
 		int t=tempsDebBloc;
 		if( blocPred>-1)
@@ -298,8 +303,10 @@ class moeoJSDecoderExacte : public moeoDecoder<MOEOT, MOEOTX>
 		for(unsigned i=blocs[numBloc].Jobdeb; i<blocs[numBloc].Jobfin+1; i++)
 		{
 			int ecartD=eoX.getCompletionTime(i)-data.getJob(eoX.getJob(i)).getD();
-			if (ecartD>0 && ecartD<t)
+			if (ecartD>0 && ecartD<t){
 				t=ecartD;
+				bloque=false;}
+
 		
 		
 			int ecartR=eoX.getCompletionTime(i)-data.getJob(eoX.getJob(i)).getP()-data.getJob(eoX.getJob(i)).getR();
@@ -307,7 +314,9 @@ class moeoJSDecoderExacte : public moeoDecoder<MOEOT, MOEOTX>
 				cout<<"bloqué par R t="<<t<<endl;
 				t=ecartR;
 				if (i<=blocs[numBloc].derAvance)
-					 blocs[numBloc].bloque=true;
+				  bloque=true;
+				else
+					bloque=false;
 			}
 		}
 		cout<<"fin calcul T"<<endl;
@@ -354,6 +363,11 @@ class moeoJSDecoderExacte : public moeoDecoder<MOEOT, MOEOTX>
 		cout<<"av init"<<endl;
 		MOEOTX eoX = initSol_et_blocs(ordre, blocs);
 		cout<<"apres init"<<endl;
+		cout<<"LISTE BLOCS :"<<endl;
+		for(unsigned i=0;i<blocs.size();i++)
+		{
+			cout<<blocs[i].Jobdeb<<" "<<blocs[i].Jobfin<<" "<<blocs[i].bloque<<" earli : "<<blocs[i].earli<<" tardi : "<<blocs[i].tardi<<endl;
+		}
 		eval(eoX);
 		popX.push_back(eoX);
 		eoX.invalidate();
@@ -366,12 +380,13 @@ class moeoJSDecoderExacte : public moeoDecoder<MOEOT, MOEOTX>
 			popX.push_back(eoX);
 			eoX.invalidate();
 			cout<<"numbloc"<<numBloc<<endl;
-			numBloc=choixBloc(blocs);
 			cout<<"LISTE BLOCS :"<<endl;
 			for(unsigned i=0;i<blocs.size();i++)
 			{
 				cout<<blocs[i].Jobdeb<<" "<<blocs[i].Jobfin<<" "<<blocs[i].bloque<<" earli : "<<blocs[i].earli<<" tardi : "<<blocs[i].tardi<<endl;
 			}
+			numBloc=choixBloc(blocs);
+			
 			
 		}
 	}
