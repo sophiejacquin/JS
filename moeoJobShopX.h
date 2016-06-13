@@ -23,8 +23,8 @@ class moeoJobShopX : public moeoRealVector < eoJobShopObjectiveVector >, public 
       
      	 	moeoRealVector<eoJobShopObjectiveVector>::printOn(os);
       		os <<this->origin()<< ' ';//<<endl;
-		//for(int i=0;i<N;i++)
-      	 	 //os << completionTime[i]<<' ';
+		for(int i=0;i<N;i++)
+      	 	 os <<listeJobs[i]<<" : "<< completionTime[i]<<' ';
     
     	}
     	void readFrom(istream& is)
@@ -44,6 +44,10 @@ class moeoJobShopX : public moeoRealVector < eoJobShopObjectiveVector >, public 
 	void setCompletionTime(std::vector<double> time_)
 	{
 		completionTime=time_;
+	}
+	void setCompletionTime(int i, double d)
+	{
+		completionTime[i]=d;
 	}
 	void setN(int N_)
     	{

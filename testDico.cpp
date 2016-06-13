@@ -8,6 +8,7 @@ using namespace std;
 #include "Parser.h"
 #include "decodeur.h"
 #include"decodeurDichotomique.h"
+#include"DecodeurExacte.h"
 #include "moeoJobShop.h"
 #include "moeoJobShopX.h"
 typedef moeoJobShop Indi;
@@ -21,6 +22,7 @@ main()
 	moeoJSEvalFunc<IndiX> plainEval(data);
         Timing<IndiX> timer(data);
         moeoJSDecoderDichotomique<Indi,IndiX> decoderDicho(timer,nb_lambda, plainEval);
+	moeoJSDecoderExacte<Indi,IndiX> decoderExacte(data, plainEval);
 	moeoJSDecoder<Indi,IndiX> decoder(timer,nb_lambda, plainEval);
         moeoJobShopInit<Indi> init(data);
 	
@@ -35,17 +37,32 @@ main()
               
 	      popX[x].printOn(cout);
 		cout<<endl;
+	      if(popX[x].validity(data)==false)
+			cout<<"PROBLEME DICO"<<endl;
 		
 	}
 	eoPop <IndiX> popXbis;
         decoder(eo, popXbis);
-	cout<<"Decoder normal : "<<endl;
+	/*cout<<"Decoder normal : "<<endl;
         for(unsigned x=0; x<popXbis.size(); ++x){
          
 	      popXbis[x].printOn(cout); cout<<endl;
 		
+	}*/
+	cout<<"décodeur exacte :"<<endl;
+	eoPop <IndiX> popXtierce;
+        decoderExacte(eo, popXtierce);
+	//popXtierce.sort();
+        for(unsigned x=0; x<popXtierce.size(); ++x){
+              
+	      popXtierce[x].printOn(cout);
+		cout<<endl;
+	      if(popXtierce[x].validity(data)==false)
+			cout<<"PROBLEME EXA"<<endl;
+		
 	}
-	cout<<"test timing nombre non entier"<<endl;
+	
+	/*cout<<"test timing nombre non entier"<<endl;
 	cout<<" 1 , 2 :"<<endl;
 	IndiX eoX1;
 	eoX1.setN(N);
