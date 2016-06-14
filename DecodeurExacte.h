@@ -42,7 +42,7 @@ class moeoJSDecoderExacte : public moeoDecoder<MOEOT, MOEOTX>
 		b.Jobfin=0;
 		b.derAvance=0;
 		b.earli=data.getJob(ordre[0]).getAlpha();
-		cout<<"debug0"<<endl;
+		//cout<<"debug0"<<endl;
 		if(d0<r0+p0)
 		{
 			completionTime.push_back(r0+p0);
@@ -56,7 +56,11 @@ class moeoJSDecoderExacte : public moeoDecoder<MOEOT, MOEOTX>
 			b.bloque=false;
 		}
 		if (b.earli==0)
-			b.val=INF;
+		{
+			if(b.tardi==0)
+				b.val=0;
+			else b.val=INF;
+		}
 		else
 			b.val=(double)b.tardi/b.earli;
 		blocs.push_back(b);
@@ -74,14 +78,20 @@ class moeoJSDecoderExacte : public moeoDecoder<MOEOT, MOEOTX>
 				b.derAvance=i;
 				b.earli=data.getJob(ordre[i]).getAlpha();
 				b.tardi=0;
-				blocs.push_back(b);
 				completionTime.push_back(d);
 				b.bloque=false;
 				
 				if (b.earli==0)
-					b.val=INF;
-				else
+				{
+					if(b.tardi==0)
+						b.val=0;
+					else b.val=INF;
+				}
+				else{
+					
+
 					b.val=(double)b.tardi/b.earli;
+				 }
 				blocs.push_back(b);
 			}
 			else if(C+p > r+p)
@@ -99,8 +109,11 @@ class moeoJSDecoderExacte : public moeoDecoder<MOEOT, MOEOTX>
 				}
 				if(blocs[blocs.size()-1].earli>0)
 					blocs[blocs.size()-1].val=(double)blocs[blocs.size()-1].tardi/blocs[blocs.size()-1].earli;
-				else
-					blocs[blocs.size()-1].val=INF;
+				else{
+					if(blocs[blocs.size()-1].tardi==0)
+						blocs[blocs.size()-1].val=0;	
+					else blocs[blocs.size()-1].val=INF;
+				}
 				completionTime.push_back(C+p);
 			}
 			else //creation d'un nouveau bloc bloqué
@@ -124,13 +137,10 @@ class moeoJSDecoderExacte : public moeoDecoder<MOEOT, MOEOTX>
 		int taillePred=nbGrosBlocs;
 		for(unsigned int i=0;i<nbGrosBlocs;i++)
 		{
-			if(blocs[i+gap].Jobdeb<0)
-			{
-				cout <<" init jdeb "<<blocs[i+gap].Jobdeb<<endl;
-				exit(0);
-			}
+
 			construire_sous_blocs(i+gap, blocs[i+gap].Jobdeb, blocs, eoX);
 			gap=blocs.size()-taillePred;
+			cout<<"gap="<<gap<<endl;
 			taillePred=blocs.size();
 		}
 		
@@ -141,12 +151,12 @@ class moeoJSDecoderExacte : public moeoDecoder<MOEOT, MOEOTX>
 	}
 	void bougerBloc(vector< Bloc> & blocs, MOEOTX & eoX, int numBloc)
 	{
-		cout<<"deb bouger blocs"<<endl;
+		//cout<<"deb bouger blocs"<<endl;
 		int blocPred=get_blocPred( blocs, numBloc);
 		int t =calculT( blocs, eoX, numBloc, blocPred);
-		 cout<<" t "<<t<<endl;
+		// cout<<" t "<<t<<endl;
 		int deb= blocs[numBloc].Jobdeb;
-		//decollage du(ou DES) bloc de droite si besoin
+		//decollage du(ou DES) bloc de droite si besoin + recalculer earli , tardi et val..
 		int j=1;
 		while(numBloc+j<blocs.size() && blocs[numBloc].Jobdeb==blocs[numBloc+j].Jobdeb)
 		{
@@ -158,6 +168,18 @@ class moeoJSDecoderExacte : public moeoDecoder<MOEOT, MOEOTX>
 				blocs[numBloc+j].derAvance=i;
 				i++;
 			}
+			blocs[numBloc+j].tardi-=blocs[numBloc].tardi;
+			blocs[numBloc+j].earli-=blocs[numBloc].earli;
+			if(blocs[numBloc].earli>0)
+				blocs[numBloc+j].val=(double)blocs[numBloc+j].tardi/blocs[numBloc+j].earli;
+			else
+			{
+				if(blocs[numBloc+j].tardi==0)
+					blocs[numBloc+j].val=0;
+				else
+					blocs[numBloc+j].val=INF;
+			}
+			j++;
 		}
 		
 		
@@ -169,8 +191,9 @@ class moeoJSDecoderExacte : public moeoDecoder<MOEOT, MOEOTX>
 			
 		}
 		erase_sous_blocs(numBloc,blocs);
+		
 		blocPred=numBloc-1;
-		//fusion bloc gauche si necessaire !!! bloc pred plus bon!!
+		//fusion bloc gauche si necessaire 
 		if(blocPred>=0 && eoX.getCompletionTime(blocs[blocPred].Jobfin)==eoX.getCompletionTime(blocs[numBloc].Jobdeb)-data.getJob(eoX.getJob(blocs[numBloc].Jobdeb)).getP())
 		{
 			if(blocs[blocPred].bloque)
@@ -200,12 +223,12 @@ class moeoJSDecoderExacte : public moeoDecoder<MOEOT, MOEOTX>
 			exit(0);
 		}
 		construire_sous_blocs(numBloc, deb,blocs,eoX);
-		cout<<"fin bouger blocs"<<endl;
+		//cout<<"fin bouger blocs"<<endl;
 		
 	}
 	void erase_sous_blocs(int & num,vector< Bloc> & blocs)
 	{
-		cout<<"deb erase sous blocs"<<endl;
+		//cout<<"deb erase sous blocs"<<endl;
 		int i=0;
 		while(blocs[i].Jobdeb<=blocs[num].Jobdeb and i<num)
 		{
@@ -214,13 +237,13 @@ class moeoJSDecoderExacte : public moeoDecoder<MOEOT, MOEOTX>
 				blocs.erase (blocs.begin()+i);
 				num--;
 			}
-			i++;
+			else i++;
 		}
-		cout<<"fin erase sous blocs"<<endl;
+		//cout<<"fin erase sous blocs"<<endl;
 	}
 	void construire_sous_blocs(int num, int deb, vector< Bloc> & blocs, MOEOTX & eoX)
 	{
-		cout<<"deb construire sous bloc"<<endl;
+		//cout<<"deb construire sous bloc"<<endl;
 		int place=num;
 		int fin=blocs[num].Jobfin;
 		int da=blocs[num].derAvance;
@@ -244,7 +267,7 @@ class moeoJSDecoderExacte : public moeoDecoder<MOEOT, MOEOTX>
 					bloque=true;
 				 derAvance++;
 			}
-			 cout<<"derAvance "<<derAvance-1<<" "<<eoX.getCompletionTime(derAvance)-data.getJob(eoX.getJob(derAvance)).getD()<<" D "<<data.getJob(eoX.getJob(derAvance)).getD()<< " R "<<data.getJob(eoX.getJob(derAvance)).getR()<<" P "<<data.getJob(eoX.getJob(derAvance)).getP()<<" C "<<eoX.getCompletionTime(derAvance)<<" i : "<<i<<" fin : "<<fin<<endl;
+			// cout<<"derAvance "<<derAvance-1<<" "<<eoX.getCompletionTime(derAvance)-data.getJob(eoX.getJob(derAvance)).getD()<<" D "<<data.getJob(eoX.getJob(derAvance)).getD()<< " R "<<data.getJob(eoX.getJob(derAvance)).getR()<<" P "<<data.getJob(eoX.getJob(derAvance)).getP()<<" C "<<eoX.getCompletionTime(derAvance)<<" i : "<<i<<" fin : "<<fin<<endl;
 
 			
 			b.derAvance=da;
@@ -268,12 +291,17 @@ class moeoJSDecoderExacte : public moeoDecoder<MOEOT, MOEOTX>
 				b.Jobfin=i-1;
 			
 				if (i<fin+1){
+					
 					b.earli=earli;
 					b.tardi=tardi;
 					if(earli>0)
 						b.val=(double)(tardi)/earli;
 					else
-						b.val=INF;
+					{
+						if(tardi==0)
+							b.val=0;
+						else b.val=INF;
+					}
 					blocs.insert(blocs.begin()+place,b);
 					 place+=1;
 				}
@@ -284,16 +312,20 @@ class moeoJSDecoderExacte : public moeoDecoder<MOEOT, MOEOTX>
 					if(earli>0)
 						blocs[place].val=(double)tardi/earli;
 					else
-						blocs[place].val=INF;
+					{
+						if(tardi==0)
+							blocs[place].val=0;
+						else blocs[place].val=INF;
+					}
 				}
 			}		
 			
 		}
-		cout<<"fin construire sous bloc"<<endl;
+		//cout<<"fin construire sous bloc"<<endl;
 	}
 	int calculT(vector< Bloc> & blocs, MOEOTX & eoX, int numBloc, int blocPred)
 	{
-		cout<<"deb calcul T"<<endl;
+		//cout<<"deb calcul T"<<endl;
 
 		bool bloque=false;
 		int tempsDebBloc= eoX.getCompletionTime(blocs[numBloc].Jobdeb)-data.getJob(eoX.getJob(blocs[numBloc].Jobdeb)).getP();
@@ -311,7 +343,7 @@ class moeoJSDecoderExacte : public moeoDecoder<MOEOT, MOEOTX>
 		
 			int ecartR=eoX.getCompletionTime(i)-data.getJob(eoX.getJob(i)).getP()-data.getJob(eoX.getJob(i)).getR();
 			if (ecartR<t){
-				cout<<"bloqué par R t="<<t<<endl;
+				
 				t=ecartR;
 				if (i<=blocs[numBloc].derAvance)
 				  bloque=true;
@@ -319,14 +351,14 @@ class moeoJSDecoderExacte : public moeoDecoder<MOEOT, MOEOTX>
 					bloque=false;
 			}
 		}
-		cout<<"fin calcul T"<<endl;
+		//cout<<"fin calcul T"<<endl;
 		return t;
 		
 			
 	}
 	int choixBloc(vector< Bloc> & blocs)
 	{
-		cout<<"deb choixBloc"<<endl;
+		//cout<<"deb choixBloc"<<endl;
 		double valMax= 0;
 		int choix=-1;
 		int s=blocs.size();
@@ -340,52 +372,56 @@ class moeoJSDecoderExacte : public moeoDecoder<MOEOT, MOEOTX>
 				choix=i;
 			}
 		}
-		cout<<" valmax="<<valMax<<" earli "<<blocs[choix].earli<<" tardi "<<blocs[choix].tardi<<endl;
-		if(blocs[choix].earli==0 && (not(blocs[choix].bloque) and valMax!=0)) exit(0);
+		//cout<<" valmax="<<valMax<<" earli "<<blocs[choix].earli<<" tardi "<<blocs[choix].tardi<<" numbloc "<<choix<<endl;
+		if(blocs[choix].earli==0 && (not(blocs[choix].bloque) and valMax!=0)){
+			 
+			cout<<choix<<" LISTE BLOCS :"<<endl;
+			for(unsigned i=0;i<blocs.size();i++)
+			{
+				cout<<blocs[i].Jobdeb<<" "<<blocs[i].Jobfin<<" "<<blocs[i].bloque<<" earli : "<<blocs[i].earli<<" tardi : "<<blocs[i].tardi<<endl;
+			}
+			exit(0);
+		}
 		return choix;
 	}
 	int get_blocPred(vector< Bloc> & blocs, int numBloc)
 	{
-		cout<<"deb bloc pred"<<endl;
+		//cout<<"deb bloc pred"<<endl;
 		int numPred=numBloc -1;
 		while(numPred>=0 && blocs[numPred].Jobdeb==blocs[numBloc].Jobdeb)
 		{
 			numPred -=1;
 		}
-		cout<<"fin bloc pred"<<endl;
+		//cout<<"fin bloc pred"<<endl;
 		return numPred;
 	}
 	void operator () (MOEOT & eo, eoPop<MOEOTX> & popX)
 	{
-		cout<<"dans deco exacte"<<endl;
+		//cout<<"dans deco exacte"<<endl;
 		vector<int> ordre=eo.getListeJobs();
 		vector<Bloc> blocs;
-		cout<<"av init"<<endl;
+		//cout<<"av init"<<endl;
 		MOEOTX eoX = initSol_et_blocs(ordre, blocs);
-		cout<<"apres init"<<endl;
-		cout<<"LISTE BLOCS :"<<endl;
+		//cout<<"apres init"<<endl;
+		/*cout<<"LISTE BLOCS :"<<endl;
 		for(unsigned i=0;i<blocs.size();i++)
 		{
 			cout<<blocs[i].Jobdeb<<" "<<blocs[i].Jobfin<<" "<<blocs[i].bloque<<" earli : "<<blocs[i].earli<<" tardi : "<<blocs[i].tardi<<endl;
-		}
+		}*/
 		eval(eoX);
 		popX.push_back(eoX);
 		eoX.invalidate();
 		int numBloc=choixBloc(blocs);
 		while(numBloc>=0)
 		{
-			
+
 			bougerBloc( blocs, eoX, numBloc);
 			eval(eoX);
 			popX.push_back(eoX);
 			eoX.invalidate();
-			cout<<"numbloc"<<numBloc<<endl;
-			cout<<"LISTE BLOCS :"<<endl;
-			for(unsigned i=0;i<blocs.size();i++)
-			{
-				cout<<blocs[i].Jobdeb<<" "<<blocs[i].Jobfin<<" "<<blocs[i].bloque<<" earli : "<<blocs[i].earli<<" tardi : "<<blocs[i].tardi<<endl;
-			}
 			numBloc=choixBloc(blocs);
+
+			
 			
 			
 		}

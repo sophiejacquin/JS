@@ -15,8 +15,8 @@ typedef moeoJobShop Indi;
 typedef moeoJobShopX IndiX;
 main()
 {
-	int N=20;
-	Parser p("../DataOneMachine/bky20/bky20_1.txt");
+	int N=100;
+	Parser p("../DataOneMachine/bky100/bky100_1.txt");
 	int nb_lambda=25;
 	Data data = p();
 	moeoJSEvalFunc<IndiX> plainEval(data);
@@ -28,7 +28,11 @@ main()
 	
 	Indi eo;
 	init(eo);
+	int t[100]= { 46 , 50 , 45 , 57 , 73 , 61 , 6 , 11 , 75 , 54 , 19 , 38 , 34 , 64 , 81 , 89 , 1 , 0 , 17 , 78 , 37 , 41 , 12 , 13 , 8 , 67 , 88 , 93 , 51 , 55 , 53 , 24 , 94 , 72 , 77 , 47 , 40 , 9 , 10 , 68 , 74 , 71 , 36 , 35 , 20 , 23 , 31 , 33 , 65 , 76 , 58 , 70 , 44 , 16 , 98 , 60 , 25 , 99 , 22 , 95 , 28 , 39 , 7 , 21 , 18 , 26 , 48 , 15 , 3 , 91 , 69 , 29 , 52 , 49 , 80 , 43 , 56 , 62 , 66 , 83 , 90 , 14 , 27 , 30 , 4 , 32 , 87 , 63 , 84 , 5 , 79 , 96 , 85 , 82 , 2 , 86 , 97 , 42 , 59 , 92   };
+	vector<int> o(&t[0],&t[0]+100);
+	eo.setListeJobs(o);
 	vector<int> jobs=eo.getListeJobs();
+	
 	eoPop <IndiX> popX;
         decoderDicho(eo, popX);
 	cout<<"Decoder Dich : "<<endl;

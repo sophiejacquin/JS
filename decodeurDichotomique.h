@@ -51,20 +51,23 @@ class moeoJSDecoderDichotomique : public moeoDecoder<MOEOT, MOEOTX>
 		point1.push_back(eoX1.objectiveVector()[1]);
 		points.push_back(point1);
 		popX.push_back(eoX1);
-		vector<bool> censure(nb_lambda,false);
+		vector<bool> censure(1,false);
 		if(point1[0]==point0[0])
+		{
 			censure[0]=true;
+			cout<<"sol unique"<<endl;
+		}
 		unsigned int i=1;
 		while( i<nb_lambda)
 		{
 
-	   		int dmax=0;
+	   		double dmax=0;
 	   		int ptselec=-1;
 	   		for(int pt=0; pt<points.size()-1;pt++)
 	   		{
 		
-				int dpts=(points[pt][0]-points[pt+1][0])*(points[pt][0]-points[pt+1][0])+(points[pt][1]-points[pt+1][1])*(points[pt][1]-points[pt+1][1]);
-		
+				double dpts=((points[pt][0]-points[pt+1][0])/10000)*((points[pt][0]-points[pt+1][0])/10000)+((points[pt][1]-points[pt+1][1])/10000)*((points[pt][1]-points[pt+1][1])/10000);
+				cout<<dpts<<endl;
 				if(dpts>=dmax && not(censure[pt]))
 				{
 					dmax=dpts;
@@ -74,9 +77,11 @@ class moeoJSDecoderDichotomique : public moeoDecoder<MOEOT, MOEOTX>
 		
            		if(ptselec==-1)
 				break;
-			cout<<ptselec<< " "<<points[ptselec][0]<<endl;
-	   		int alpha1=(points[ptselec+1][1]-points[ptselec][1]);
-			int alpha2=(points[ptselec][0]-points[ptselec+1][0]);
+			cout<<"pt select"<<ptselec<< " "<<points[ptselec][0]<<endl;
+			double a1=(points[ptselec+1][1]-points[ptselec][1]);
+			double a2=(points[ptselec][0]-points[ptselec+1][0]);
+	   		double alpha1=(points[ptselec+1][1]-points[ptselec][1])/(a1+a2);
+			double alpha2=(points[ptselec][0]-points[ptselec+1][0])/(a1+a2);
 			MOEOTX eoX;
 			eoX.setN(N);
 			eoX.setListeJobs(jobs);
@@ -90,16 +95,24 @@ class moeoJSDecoderDichotomique : public moeoDecoder<MOEOT, MOEOTX>
 			point.push_back(eoX.objectiveVector()[0]);
 			point.push_back(eoX.objectiveVector()[1]);
 			if(point[0]==points[ptselec][0]|| point[0]==points[ptselec+1][0])
-				{censure[ptselec]=true;
-				cout<<"là "<<i <<endl;}
+				{
+					if(points[ptselec][0]==36758)
+						cout<<point[0]<<"  "<<points[ptselec+1][0]<<endl;
+					censure[ptselec]=true;
+					cout<<"ici on censure"<<endl;
+				}
 			else{
 				points.insert(points.begin()+ptselec+1,point);
+				censure.insert(censure.begin()+ptselec+1,false);
 				i++;
 				popX.push_back(eoX);
 			}
 			
 				
-		}	
+		}
+		for(int i=0;i<points.size();i++)
+			cout<<points[i][0]<<"   ";
+		cout<<endl;
 	}
 private :
 	Timing<MOEOTX> timer;
