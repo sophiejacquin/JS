@@ -15,8 +15,8 @@ typedef moeoJobShop Indi;
 typedef moeoJobShopX IndiX;
 main()
 {
-	int N=100;
-	Parser p("../DataOneMachine/bky100/bky100_1.txt");
+	int N=20;
+	Parser p("../DataOneMachine/bky20/bky20_300.txt");
 	int nb_lambda=25;
 	Data data = p();
 	moeoJSEvalFunc<IndiX> plainEval(data);
@@ -28,9 +28,34 @@ main()
 	
 	Indi eo;
 	init(eo);
-	int t[100]= { 46 , 50 , 45 , 57 , 73 , 61 , 6 , 11 , 75 , 54 , 19 , 38 , 34 , 64 , 81 , 89 , 1 , 0 , 17 , 78 , 37 , 41 , 12 , 13 , 8 , 67 , 88 , 93 , 51 , 55 , 53 , 24 , 94 , 72 , 77 , 47 , 40 , 9 , 10 , 68 , 74 , 71 , 36 , 35 , 20 , 23 , 31 , 33 , 65 , 76 , 58 , 70 , 44 , 16 , 98 , 60 , 25 , 99 , 22 , 95 , 28 , 39 , 7 , 21 , 18 , 26 , 48 , 15 , 3 , 91 , 69 , 29 , 52 , 49 , 80 , 43 , 56 , 62 , 66 , 83 , 90 , 14 , 27 , 30 , 4 , 32 , 87 , 63 , 84 , 5 , 79 , 96 , 85 , 82 , 2 , 86 , 97 , 42 , 59 , 92   };
-	vector<int> o(&t[0],&t[0]+100);
-	eo.setListeJobs(o);
+	//int t[20]= {11 , 8 , 18 , 16 , 14 , 0 , 7 , 13 , 15 , 2 , 3 , 5 , 9 , 4 , 19 , 17 , 1 , 10 , 12   };
+	//vector<int> o(&t[0],&t[0]+20);
+	//eo.setListeJobs(o);
+	/*int t[20];
+	for(int i=0;i <20;i ++)
+	{
+		t[i]=i;
+	}
+	for(int i=0;i <20;i ++)
+	{
+		int dmin=data.getJob(t[i]).getD();
+		int j=i;
+		for(int k=i;k<20;k++)
+		{
+			if(dmin>data.getJob(t[k]).getD())
+			{
+				dmin=data.getJob(t[k]).getD();
+				j=k;
+			}
+		}
+		int sauv=t[i];
+		t[i]=t[j];
+		t[j]=sauv;
+	}
+	vector<int> o(&t[0],&t[0]+20);
+	eo.setListeJobs(o);*/
+	
+	
 	vector<int> jobs=eo.getListeJobs();
 	
 	eoPop <IndiX> popX;
@@ -57,6 +82,7 @@ main()
 	eoPop <IndiX> popXtierce;
         decoderExacte(eo, popXtierce);
 	//popXtierce.sort();
+	cout<<" taille : "<<popXtierce.size()<<endl;
         for(unsigned x=0; x<popXtierce.size(); ++x){
               
 	      popXtierce[x].printOn(cout);

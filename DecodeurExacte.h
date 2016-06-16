@@ -42,12 +42,15 @@ class moeoJSDecoderExacte : public moeoDecoder<MOEOT, MOEOTX>
 		b.Jobfin=0;
 		b.derAvance=0;
 		b.earli=data.getJob(ordre[0]).getAlpha();
+		int nR=0;
+		int nB=0;
 		//cout<<"debug0"<<endl;
 		if(d0<r0+p0)
 		{
 			completionTime.push_back(r0+p0);
 			b.tardi=data.getJob(ordre[0]).getBeta();
 			b.bloque=true;
+			nB++;
 		}
 		else
 		{
@@ -72,6 +75,12 @@ class moeoJSDecoderExacte : public moeoDecoder<MOEOT, MOEOTX>
 			double C=completionTime[i-1];
 			if(d>C+p and d > r+p)
 			{
+				if(data.getJob(ordre[i]).getAlpha()==0)
+				{
+					blocs[blocs.size()-1].fin=i;
+					if(blocs[blocs.size()-1].derAvance==i-1)
+						blocs[blocs.size()-1].derAvance=i;
+				}
 				Bloc b;
 				b.Jobdeb=i;
 				b.Jobfin=i;
@@ -94,18 +103,20 @@ class moeoJSDecoderExacte : public moeoDecoder<MOEOT, MOEOTX>
 				 }
 				blocs.push_back(b);
 			}
-			else if(C+p > r+p)
+			else if(C > r)
 			{
 				blocs[blocs.size()-1].Jobfin=i;
 				if(C+p==d)
 				{
 					blocs[blocs.size()-1].earli+=data.getJob(ordre[i]).getAlpha();
-					blocs[blocs.size()-1].derAvance=i;
+					if(blocs[blocs.size()-1].derAvance==i-1)
+						blocs[blocs.size()-1].derAvance=i;
 					
 				}
 				else
 				{
 					blocs[blocs.size()-1].tardi+=data.getJob(ordre[i]).getBeta();
+					nR++;
 				}
 				if(blocs[blocs.size()-1].earli>0)
 					blocs[blocs.size()-1].val=(double)blocs[blocs.size()-1].tardi/blocs[blocs.size()-1].earli;
@@ -127,11 +138,12 @@ class moeoJSDecoderExacte : public moeoDecoder<MOEOT, MOEOTX>
 				b.tardi=0;
 				b.val=0;
 				blocs.push_back(b);
-				completionTime.push_back(r+p);	
+				completionTime.push_back(r+p);
+				nB++;	
 			}
 		}
 		eoX.setCompletionTime(completionTime);
-		
+		cout<<"nR="<<nR<<" nB="<<nB<<endl;
 		int nbGrosBlocs=blocs.size();
 		int gap=0;
 		int taillePred=nbGrosBlocs;
@@ -140,7 +152,7 @@ class moeoJSDecoderExacte : public moeoDecoder<MOEOT, MOEOTX>
 
 			construire_sous_blocs(i+gap, blocs[i+gap].Jobdeb, blocs, eoX);
 			gap=blocs.size()-taillePred;
-			cout<<"gap="<<gap<<endl;
+			//cout<<"gap="<<gap<<endl;
 			taillePred=blocs.size();
 		}
 		
@@ -373,7 +385,7 @@ class moeoJSDecoderExacte : public moeoDecoder<MOEOT, MOEOTX>
 			}
 		}
 		//cout<<" valmax="<<valMax<<" earli "<<blocs[choix].earli<<" tardi "<<blocs[choix].tardi<<" numbloc "<<choix<<endl;
-		if(blocs[choix].earli==0 && (not(blocs[choix].bloque) and valMax!=0)){
+		/*if(blocs[choix].earli==0 && (not(blocs[choix].bloque) and valMax!=0)){
 			 
 			cout<<choix<<" LISTE BLOCS :"<<endl;
 			for(unsigned i=0;i<blocs.size();i++)
@@ -381,7 +393,7 @@ class moeoJSDecoderExacte : public moeoDecoder<MOEOT, MOEOTX>
 				cout<<blocs[i].Jobdeb<<" "<<blocs[i].Jobfin<<" "<<blocs[i].bloque<<" earli : "<<blocs[i].earli<<" tardi : "<<blocs[i].tardi<<endl;
 			}
 			exit(0);
-		}
+		}*/
 		return choix;
 	}
 	int get_blocPred(vector< Bloc> & blocs, int numBloc)
