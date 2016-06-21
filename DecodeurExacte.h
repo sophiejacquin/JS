@@ -77,10 +77,12 @@ class moeoJSDecoderExacte : public moeoDecoder<MOEOT, MOEOTX>
 			{
 				if(data.getJob(ordre[i]).getAlpha()==0)
 				{
-					blocs[blocs.size()-1].fin=i;
+					blocs[blocs.size()-1].Jobfin=i;
 					if(blocs[blocs.size()-1].derAvance==i-1)
 						blocs[blocs.size()-1].derAvance=i;
+					completionTime.push_back(C+p);
 				}
+				else{
 				Bloc b;
 				b.Jobdeb=i;
 				b.Jobfin=i;
@@ -101,7 +103,7 @@ class moeoJSDecoderExacte : public moeoDecoder<MOEOT, MOEOTX>
 
 					b.val=(double)b.tardi/b.earli;
 				 }
-				blocs.push_back(b);
+				blocs.push_back(b);}
 			}
 			else if(C > r)
 			{
