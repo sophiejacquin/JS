@@ -1,0 +1,7 @@
+#!/bin/bash
+
+cd /home/jacquins/Documents/JSMulti/PFE-master/JobShop_/src/runs80
+./test.sh
+cd /home/jacquin/Documents/JSMulti/PFE-master/JobShop_/src/runs60
+./test.sh
+

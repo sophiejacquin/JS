@@ -1,0 +1,12 @@
+#!/bin/bash
+./test.sh
+cd("../runs100")
+./test.sh
+cd("../runs80")
+./test.sh
+cd("../runs80Dico")
+./test.sh
+cd("../runs60")
+./test.sh
+cd("../runs60Dico")
+./test.sh
