@@ -166,13 +166,13 @@ int main (int argc, char *argv[])
     //std::////cout << "Final Archive " << std::endl;
     //std::////cout << "sans archive : ";
 //POUR IRACE:
-	/*eoJobShopObjectiveVector pointRef=choixPointRef( data);
+	eoJobShopObjectiveVector pointRef=choixPointRef( data);
 	cout<<pointRef[0]<<" "<<pointRef[1]<<endl;
 	moeoHyperVolumeMetric<eoJobShopObjectiveVector> hyperVol(false,pointRef);
 	vector<eoJobShopObjectiveVector> res;
     for(int i=0;i<arch.size();i++)
         res.push_back(arch[i].objectiveVector());
    
-     cout<<"air de l'hypervolume :"<<-1*hyperVol(res)<<endl;*/
+     cout<<"air de l'hypervolume :"<<-1*hyperVol(res)<<endl;
     return EXIT_SUCCESS;
 }
