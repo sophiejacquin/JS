@@ -1,4 +1,38 @@
-
+/*
+* <moeoDecodedNSGAII.h>
+* Copyright (C) DOLPHIN Project-Team, INRIA Futurs, 2006-2008
+* (C) OPAC Team, LIFL, 2002-2008
+*
+* Igor Machado & Sophie Jacquin
+*
+* This software is governed by the CeCILL license under French law and
+* abiding by the rules of distribution of free software.  You can  use,
+* modify and/ or redistribute the software under the terms of the CeCILL
+* license as circulated by CEA, CNRS and INRIA at the following URL
+* "http://www.cecill.info".
+*
+* As a counterpart to the access to the source code and  rights to copy,
+* modify and redistribute granted by the license, users are provided only
+* with a limited warranty  and the software's author,  the holder of the
+* economic rights,  and the successive licensors  have only  limited liability.
+*
+* In this respect, the user's attention is drawn to the risks associated
+* with loading,  using,  modifying and/or developing or reproducing the
+* software by the user in light of its specific status of free software,
+* that may mean  that it is complicated to manipulate,  and  that  also
+* therefore means  that it is reserved for developers  and  experienced
+* professionals having in-depth computer knowledge. Users are therefore
+* encouraged to load and test the software's suitability as regards their
+* requirements in conditions enabling the security of their systems and/or
+* data to be ensured and,  more generally, to use and operate it in the
+* same conditions as regards security.
+* The fact that you are presently reading this means that you have had
+* knowledge of the CeCILL license and that you accept its terms.
+*
+* ParadisEO WebSite : http://paradiseo.gforge.inria.fr
+* Contact: paradiseo-help@lists.gforge.inria.fr
+*
+*/
 //-----------------------------------------------------------------------------
 
 #ifndef MOEODECODEDNSGAII_H_
@@ -59,6 +93,12 @@ public:
     defaultGenContinuator(0), continuator(_continuator), decoder(_decoder), select (2),
     selectMany(select,1.0), transVar(_crossover, _pCross, _mutation, _pMut,_mutVec,_pMutVec), selectTransform(selectMany,transVar ), defaultSGAGenOp(_crossover, _pCross, _mutation, _pMut), genBreed(select, defaultSGAGenOp), breed(selectTransform),nsgaiiFA(comp), fitnessAssignment(false, nsgaiiFA)
     {}
+    
+    moeoDecodedNSGAII (unsigned int _maxGen, moeoDecoder< SMOEOT, XMOEOT >& _decoder, eoQuadOp < SMOEOT > & _crossover, double _pCross, eoMonOp < SMOEOT > & _mutation, double _pMut, eoVectOp<SMOEOT> & _mutVec, double _pMutVec) :
+    defaultGenContinuator(_maxGen), continuator(defaultGenContinuator), decoder(_decoder), select (2),
+    selectMany(select,1.0), transVar(_crossover, _pCross, _mutation, _pMut,_mutVec,_pMutVec), selectTransform(selectMany,transVar ), defaultSGAGenOp(_crossover, _pCross, _mutation, _pMut), genBreed(select, defaultSGAGenOp), breed(selectTransform),nsgaiiFA(comp), fitnessAssignment(false, nsgaiiFA)
+    {}
+
     /**
      * Ctor with a eoContinue and a eoGenOp.
      * @param _continuator stopping criteria
@@ -190,7 +230,7 @@ public:
 
         fitnessAssignment(popS, popX);
         diversityAssignment(popS, popX);
-        updateMaxObj(vObjMax, popX);
+       /* updateMaxObj(vObjMax, popX);
    
         if(updateMinObj(vObjMin, popX))
         {
@@ -199,8 +239,7 @@ public:
             calcAvgObj(vObjAvg, popX);
             printObj("avg", vObjAvg);
             printObj("max", vObjMax);
-        }
-     
+        }*/     
 
         do
         {
@@ -235,29 +274,28 @@ public:
             {
                 
                 popS[s].fitness(unionS[s].fitness());
-                if(popS[s].origin()!= unionS[s].origin())
-                    cout<<"*:%****************/*********************ATTENTION PROOOOOOOOOOOOOOBLEME ORIGINE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!**************************************"<<endl;
+                //if(popS[s].origin()!= unionS[s].origin())
+                   // cout<<"*:%****************/*********************ATTENTION PROOOOOOOOOOOOOOBLEME ORIGINE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!**************************************"<<endl;
                 popS[s].diversity(unionS[s].diversity());
             }
 
             for(unsigned s=sumS; s<unionS.size(); s++)
             {
                 //cout<< offspringS[s-sumS].origin()<<"   "<<unionS[s].origin()<<endl;
-                if(offspringS[s-sumS].origin()!= unionS[s].origin())
-                    cout<<"DEUXIEME *:%****************/*********************ATTENTION PROOOOOOOOOOOOOOBLEME ORIGINE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!**************************************"<<endl;
+               // if(offspringS[s-sumS].origin()!= unionS[s].origin())
+                //    cout<<"DEUXIEME *:%****************/*********************ATTENTION PROOOOOOOOOOOOOOBLEME ORIGINE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!**************************************"<<endl;
                 offspringS[s-sumS].fitness(unionS[s].fitness());
                 offspringS[s-sumS].diversity(unionS[s].diversity());
             }
-            updateMaxObj(vObjMax, popX);
-            if(updateMinObj(vObjMin, popX))
+            //cout << "Delta countGen=" << countGen << endl;            //updateMaxObj(vObjMax, popX);
+            /*(updateMinObj(vObjMin, popX))
             {
                 cout << "countGen=" << countGen << endl;
                 printObj("min", vObjMin);
                 calcAvgObj(vObjAvg, popX);
                 printObj("avg", vObjAvg);
                 printObj("max", vObjMax);
-            }
-           
+            }*/           
            
             replace (popS, offspringS);
             
@@ -304,6 +342,152 @@ public:
           
         }
         while (continuator (popX));
+	cout << "Delta countGen=" << countGen << endl; 
+    }
+
+    
+    void operator () (eoPop < SMOEOT >& popS,moeoUnboundedArchive < XMOEOT > & arch)
+    {
+        unsigned int nObjectives = XMOEOT::ObjectiveVector::nObjectives();
+        std::vector<double> vObjMin(nObjectives, std::numeric_limits<double>::max());
+        std::vector<double> vObjMax(nObjectives, std::numeric_limits<double>::min());
+        std::vector<double> vObjAvg(nObjectives, 0.0);
+        
+        eoPop < SMOEOT > offspringS;
+        
+        eoPop < XMOEOT > popX;
+        unsigned sumX = 0;
+        
+        for(unsigned s=0; s<popS.size(); s++)
+        {
+            popS[s].origin(s);
+            
+            decoder(popS[s], popX);
+            for(unsigned x=sumX; x<popX.size(); x++)
+                popX[x].origin(s);
+            
+            sumX = popX.size();
+        }
+        arch(popX);
+        
+        unsigned countGen = 0;
+        
+        
+        fitnessAssignment(popS, popX);
+        diversityAssignment(popS, popX);
+        /* updateMaxObj(vObjMax, popX);
+         
+         if(updateMinObj(vObjMin, popX))
+         {
+         cout << "countGen=" << countGen << endl;
+         printObj("min", vObjMin);
+         calcAvgObj(vObjAvg, popX);
+         printObj("avg", vObjAvg);
+         printObj("max", vObjMax);
+         }*/     
+        
+        do
+        {
+            countGen++;
+            // generate offspring, worths are recalculated if necessary
+            breed (popS, offspringS);
+            
+            int sumS = popS.size();
+            for(unsigned s=0; s<offspringS.size(); s++)
+                offspringS[s].origin(sumS + s);
+            
+            eoPop < SMOEOT > unionS;
+            unionS.reserve (popS.size () + offspringS.size ());
+            std::copy (popS.begin (), popS.end (), back_inserter (unionS));
+            std::copy (offspringS.begin (), offspringS.end (), back_inserter (unionS));
+            
+            unsigned sumX = popX.size();
+            for(unsigned s=0; s<offspringS.size(); s++)
+            {
+                decoder(offspringS[s], popX);
+                
+                for(unsigned x=sumX; x<popX.size(); x++)
+                    popX[x].origin(offspringS[s].origin());
+                sumX = popX.size();
+            }
+            arch(popX);
+            fitnessAssignment(unionS, popX);
+            diversityAssignment(unionS, popX);
+            
+            // safety! re-enter values of fitness and diversity
+            for(unsigned s=0; s<sumS; s++)
+            {
+                
+                popS[s].fitness(unionS[s].fitness());
+               // if(popS[s].origin()!= unionS[s].origin())
+                 //   cout<<"*:%****************/*********************ATTENTION PROOOOOOOOOOOOOOBLEME ORIGINE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!**************************************"<<endl;
+                popS[s].diversity(unionS[s].diversity());
+            }
+            
+            for(unsigned s=sumS; s<unionS.size(); s++)
+            {
+                //cout<< offspringS[s-sumS].origin()<<"   "<<unionS[s].origin()<<endl;
+                //if(offspringS[s-sumS].origin()!= unionS[s].origin())
+                //    cout<<"DEUXIEME *:%****************/*********************ATTENTION PROOOOOOOOOOOOOOBLEME ORIGINE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!**************************************"<<endl;
+                offspringS[s-sumS].fitness(unionS[s].fitness());
+                offspringS[s-sumS].diversity(unionS[s].diversity());
+            }
+                       //updateMaxObj(vObjMax, popX);
+            /*(updateMinObj(vObjMin, popX))
+             {
+             cout << "countGen=" << countGen << endl;
+             printObj("min", vObjMin);
+             calcAvgObj(vObjAvg, popX);
+             printObj("avg", vObjAvg);
+             printObj("max", vObjMax);
+             }*/           
+            
+            replace (popS, offspringS);
+            
+            
+            
+            for(unsigned x=0; x<popX.size(); x++)
+            {
+                
+                bool ok=false;
+                for(unsigned s=0; s<popS.size() && !ok; s++)
+                {
+                    
+                    if(popX[x].origin()==popS[s].origin())
+                    {
+                        
+                        popX[x].origin(s);
+                        ok=true;
+                        break;
+                    }
+                    
+                }
+                if(!ok)
+                {
+                    popX[x].origin(-1);
+                }
+                
+            }
+            for(unsigned x=0; x<popX.size(); ++x)
+            {
+                if(popX[x].origin()==-1)
+                {
+                    popX.erase(popX.begin()+x);
+                    --x;
+                }
+            }
+            
+            sumX=popX.size();
+            
+            //popX.sort();
+            for(unsigned s=0; s<popS.size(); s++)
+                popS[s].origin(s);
+            // if(popX[sumX-1].objectiveVector()[0]>vObjMin[0] && popX[sumX-1].objectiveVector()[1]>vObjMin[1])
+            //exit(1);
+            
+        }
+        while (continuator (popX));
+	cout << "Delta countGen=" << countGen << endl; 
     }
 
 

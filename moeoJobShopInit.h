@@ -33,7 +33,7 @@ class moeoJobShopInit: public eoInit<eoJobShop> {
 		{
 			order.push_back(i);
 		}
-	
+		 std::srand ( unsigned ( std::time(0) ) );
 		random_shuffle ( order.begin(), order.end() );
 		
 		eo.setListeJobs(order);

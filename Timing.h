@@ -31,15 +31,17 @@ public:
 		*/
 	}
 
-	void timing(const vector<int> & ordre, vector<double> & temps, int lambda, int lambda2)
+	void timing(const vector<int> & ordre, vector<double> & temps, double lambda, double lambda2)
 	{
 		
 		cout<<lambda<<" "<<lambda2<<endl;
 		int n=data.getN();
+
 		vector<int> H ;
 		H.push_back(0.0);
 		int ld=0;int lf=0;
 		vector<int> gamma;
+
 		gamma.push_back(0);
 		vector<double> C ;
 		C.push_back(0);
@@ -51,9 +53,11 @@ public:
 	
 			int pk=data.getJob(ordre[k-1]).getP();
 			int dk=data.getJob(ordre[k-1]).getD();
+
 			int alphak=lambda*data.getJob(ordre[k-1]).getAlpha();
 			int betak=(lambda2)*data.getJob(ordre[k-1]).getBeta();
 			
+
 			double x=C[k-1];
 			if(x<rk)x=rk;
 			x=x+pk-dk;
@@ -67,6 +71,7 @@ public:
 				//cout<<"mise à jour H"<<endl;
 				double diff=H[lf]-compressionMax;
 				int l=lf;
+				
 				while(l>ld-1)
 				{
 					H[l]=H[l]-diff;
@@ -87,9 +92,11 @@ public:
 					double Hl=H[lf-1]+x;
 					gamma.push_back(0);
 					H.push_back(Hl);
+						
 				}
 				gamma[lf]+=alphak;
 				C.push_back(dk);
+				
 			}
 			else
 			{
@@ -103,7 +110,7 @@ public:
 					
 					if(Hnew==H[newP])
 					{
-						gamma[newP]+=alphak+betak;
+						gamma[newP]+=alphak+betak; 
 					}
 					else
 					{
@@ -118,20 +125,22 @@ public:
 				} 
 				gamma[lf]-=betak;
 				int i=lf;
-				C.push_back(P-H[i]);
-				while(gamma[i]<=0 && i>ld)
+				C.push_back(P-H[i]); 
+				while(gamma[i]<0 && i>ld)//inégalité remplacée par inégalité stricte
 				{
 					gamma[i-1]=gamma[i-1]+gamma[i];
+
 					C[k]=P-H[i-1];//change
+
 					i=i-1;
 					lf--;
 				}
 				
-				while(lf>gamma.size())
+				while(lf<gamma.size()-1)//a verif
 				{
 					gamma.pop_back(); H.pop_back();
 				}
-				//cout<<H[ld]<<endl;
+				
 			}
 		}
 		
@@ -148,7 +157,10 @@ public:
 		temps=C;
 		
 	}
-
+	Data & getData()
+	{
+		return data;
+	}
 
 private:
  

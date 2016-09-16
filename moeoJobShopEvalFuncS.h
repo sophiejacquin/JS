@@ -36,14 +36,14 @@ class moeoJSEvalFunc : public eoEvalFunc<EOT>
     // test for invalid to avoid recomputing fitness of unmodified individuals
     if (_eo.invalid())
       {
-         int tardiness =0;
-	 int earliness=0;
+         double tardiness =0;
+	 double earliness=0;
           for(int i=0;i<data.getN(); i++)
           {
              
                   int job=_eo.getJob(i);
-                  int e=0; int t=0;
-                  int c=_eo.getCompletionTime(i);
+                  double e=0; double t=0;
+                  double c=_eo.getCompletionTime(i);
                   int d=data.getJob(job).getD();
                   int alpha=data.getJob(job).getAlpha();
                   int beta =data.getJob(job).getBeta();
