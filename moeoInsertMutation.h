@@ -17,6 +17,7 @@ class moeoInsertMutation: public eoMonOp<eoJobShop>
 	virtual std::string className() const { return "moeoInsertMutation"; }
 	bool operator() (eoJobShop & eo)
 	{
+		
 		eoShiftMutation< eoVector<double, int> > mut;
 		eoVector<double, int> x;
 		x.value(eo.getListeJobs());

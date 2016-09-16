@@ -34,7 +34,7 @@ public:
 	void timing(const vector<int> & ordre, vector<double> & temps, double lambda, double lambda2)
 	{
 		
-		cout<<lambda<<" "<<lambda2<<endl;
+		//cout<<lambda<<" "<<lambda2<<endl;
 		int n=data.getN();
 
 		vector<int> H ;

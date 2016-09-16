@@ -16,7 +16,7 @@ using namespace std;
 #include "moeoJobShopX.h"
 #include "moeoJobShopEvalFunc.h"
 
-typedef moeoJobShop Indi;
+typedef moeoJobShopX Indi;
 
 #include <make_pop.h>
 eoPop<Indi>&  make_pop(eoParser& _parser, eoState& _state, eoInit<Indi> & _init)
@@ -63,15 +63,16 @@ int main (int argc, char *argv[])
     // parameters
     unsigned int MAX_GEN = parser.createParam((unsigned int)(500), "maxGen", "Maximum number of generations",'G',"Param").value();
     unsigned int nb_lambda = parser.createParam((unsigned int)(5), "nb_lambda", "number of solutions of the sub problem",'l',"Param").value();
-    unsigned int alpha = parser.createParam((unsigned int)(1), "alpha", "coef alpha WS",'a',"Param").value();
-    unsigned int beta = parser.createParam((unsigned int)(1), "beta", "coef beta WS",'b',"Param").value();
+    double alpha = parser.createParam((double)(1), "alpha", "coef alpha WS",'a',"Param").value();
+    double beta = parser.createParam((double)(1), "beta", "coef beta WS",'b',"Param").value();
     // objective functions evaluation
     //moeoUCPEval eval;
-    moeoJSEvalFunc<Indi> plainEval(data,alpha,beta);
+    Timing<Indi> timer(data);
+    moeoJSEvalFunc<Indi> plainEval(data,alpha,beta,timer);
 
     // turn that object into an evaluation counter
     eoEvalFuncCounter<Indi> eval(plainEval);
-    Timing<IndiX> timer(data);
+    
    
     moeoJobShopInit<Indi> init(data);
 
@@ -120,9 +121,9 @@ int main (int argc, char *argv[])
     
    
     eoTimeContinue< Indi >  continuator(maxtime);
-    eoCheckPoint<IndiX> checkpoint (continuator);
+    eoCheckPoint<Indi> checkpoint (continuator);
     moeoUnboundedArchive < Indi > arch;
-    moeoArchiveUpdater<Indi> updater(arch1, pop);
+    moeoArchiveUpdater<Indi> updater(arch, pop);
     checkpoint.add(updater);
     eoSGAGenOp<Indi> op(cross, pCross, mut, pMut);
      //moeoSteadyHyperVolumeContinue<Indi> continuator( 0, 100, hyperVol);
@@ -133,7 +134,7 @@ int main (int argc, char *argv[])
         moeoNSGAII < Indi > nsgaII (checkpoint, eval, op);
     	// run the algo
         
-    	nsgaII (pop,arch);
+    	nsgaII (pop);
 
     
 

@@ -19,7 +19,7 @@ public:
 
   bool operator()(EOT & eo1, EOT& eo2)
   { //2points
-	//////cout<<"enter crossover"<<endl;
+	;
         bool oneAtLeastIsModified(true);
 	unsigned int N = eo1.getN();
 	unsigned int p1, p2; //random int;
@@ -27,7 +27,7 @@ public:
 	
 	p1 =  rdm(); // rng.random(N);
 	p2 =  rdm(); // rng.random(N);
-	//////cout <<"p1, p2 " <<p1<<" "<<p2<<endl;
+	cout <<"p1, p2 " <<p1<<" "<<p2<<endl;
 	// vérifie et corrige point1 < point2
 	if (p1 > p2)
 		std::swap(p1, p2);
@@ -38,6 +38,7 @@ public:
 		
 		offspring.push_back(generateOffspring(eo1, eo2, p1, p2));
 		offspring.push_back(generateOffspring(eo2, eo1, p1, p2));
+		
 		eo1 = offspring[0];
 		eo2 = offspring[1];
 		oneAtLeastIsModified = true;
@@ -46,6 +47,7 @@ public:
 	{
 		oneAtLeastIsModified = false;
 	}
+	;
 
     return oneAtLeastIsModified;
   }

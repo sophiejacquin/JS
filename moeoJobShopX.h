@@ -61,6 +61,14 @@ class moeoJobShopX : public moeoRealVector < eoJobShopObjectiveVector >, public 
 	{
 		listeJobs=liste;
 	}
+	vector<int> & getListeJobs()
+	{
+		return listeJobs;
+	}
+	int operator [](unsigned int i)
+	{
+		return listeJobs[i];
+	}
 	bool validity(Data data)
 	{
 		for(int i=1; i<N;i++)
